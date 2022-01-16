@@ -3,66 +3,46 @@ import { WEAPON_LIST } from "../shared/utils";
 import { WeaponTypes, WEAPON_BAG_TYPES } from "../typings/weapons";
 import { Delay } from "./utils";
 
-
 export const weapons: Map<number, WeaponTypes> = new Map();
 
-// on('onClientResourceStart', (resource: string) => {
-// 	if (resource !== GetCurrentResourceName()) return;
-
-// 	const melee = LocalPlayer.state['weapons:melee']
-// 	const handguns = LocalPlayer.state['weapons:handGuns']
-// 	const heavy = LocalPlayer.state['weapons:heavy']
-
-// 	GetGamePool("CObject").forEach((obj: number) => {
-// 	});
-
-// 	// LocalPlayer.state.set('weapons:melee', 0, true)
-// 	// LocalPlayer.state.set('weapons:handGuns', 0, true)
-// 	// LocalPlayer.state.set('weapons:heavy', 0, true);
-
-// })
-
-on("onClientResourceStop", (resource: string) => {
+on('onClientResourceStart', (resource: string) => {
 	if (resource !== GetCurrentResourceName()) return;
-	for (const [source] of weapons) {
-		handleDeleteForServerId(source);
-	}
+
+	GetGamePool("CObject").forEach((obj: number) => {
+		// cleanup the weapon objects on resource start
+		if (Entity(obj).state.isClientWeapon) {
+			SetEntityAsMissionEntity(obj, true, true)
+			DeleteEntity(obj)
+		}
+	});
+
+	LocalPlayer.state.set('weapons:melee', 0, true)
+	LocalPlayer.state.set('weapons:handGuns', 0, true)
+	LocalPlayer.state.set('weapons:heavy', 0, true);
 })
 
 const handleMapSet = (plySrc: number, prop: Prop, weaponType: string)  => {
 	let weaponData = weapons.get(plySrc);
-	if (weaponData) {
-		if (weaponType === "weapons:melee") {
-			if (weaponData.melee) {
-				weaponData.melee.delete();
-			}
-			weaponData.melee = prop;
-		} else if (weaponType === "weapons:handGuns") {
-			if (weaponData.handgun) {
-				weaponData.handgun.delete();
-			}
-			weaponData.handgun = prop;
-		} else if (weaponType === "weapons:heavy") {
-			if (weaponData.heavy) {
-				weaponData.heavy.delete();
-			}
-			weaponData.heavy = prop;
-		}
-	} else {
-		let weaponData: WeaponTypes = {
-			melee: undefined,
-			handgun: undefined,
-			heavy: undefined
-		}
-		if (weaponType === "weapons:melee") {
-			weaponData.melee = prop;
-		} else if (weaponType === "weapons:handGuns") {
-			weaponData.handgun = prop;
-		} else if (weaponType === "weapons:heavy") {
-			weaponData.heavy = prop;
-		}
-		weapons.set(plySrc, weaponData);
+	weaponData = weaponData ? weaponData : {
+		melee: undefined,
+		handgun: undefined,
+		heavy: undefined
 	}
+
+	const { melee, handgun, heavy } = weaponData;
+
+	if (weaponType === "weapons:melee") {
+		melee?.delete();
+		weaponData.melee = prop;
+	} else if (weaponType === "weapons:handGuns") {
+		handgun?.delete();
+		weaponData.handgun = prop;
+	} else if (weaponType === "weapons:heavy") {
+		heavy?.delete();
+		weaponData.heavy = prop;
+	}
+	weapons.set(plySrc, weaponData);
+
 }
 
 const serverId = GetPlayerServerId(PlayerId());
@@ -72,8 +52,9 @@ for (const stateBagName of WEAPON_BAG_TYPES) {
 		const plySrc: number = Number(bagName.replace("player:", ''))
 		// We'll get this back as replicated, just discard it.
 		if (replicated && plySrc === serverId) return;
+		console.log(plySrc, stateBagName)
 		if (value == 0) {
-			handleDeleteForServerId(plySrc);
+			handleDeleteForServerId(plySrc, stateBagName);
 			return;
 		}
 
@@ -90,6 +71,7 @@ for (const stateBagName of WEAPON_BAG_TYPES) {
 		const ped = ply.Ped;
 		const weaponObj = await World.createProp(weaponInfo.model, ped.Position, true, true, false);
 		if (!weaponObj) return;
+		Entity(weaponObj.Handle).state.set('isClientWeapon', true, false);
 		handleMapSet(plySrc, weaponObj, stateBagName);
 		weaponObj.attachToBone(
 			ped.Bones.getBone(weaponInfo.bone),
@@ -106,22 +88,36 @@ for (const stateBagName of WEAPON_BAG_TYPES) {
 
 onNet("onPlayerDropped", (serverId: number) => {
 	// When the player is dropped we need to remove their weapons
-	handleDeleteForServerId(serverId);
+	handleDeleteAllForServerId(serverId);
 })
 
-const handleDeleteForServerId = (serverId: number) => {
+const handleDeleteForServerId = (serverId: number, weaponType: string) => {
+	const weaponData = weapons.get(serverId);
+	if (weaponData) {
+		const {handgun, melee, heavy} = weaponData;
+		
+		if (weaponType === "weapons:melee") {
+			melee?.delete();
+			weaponData.melee = null;
+		} else if (weaponType === "weapons:handGuns") {
+			handgun?.delete();
+			weaponData.handgun = null;
+		} else if (weaponType === "weapons:heavy") {
+			heavy?.delete();
+			weaponData.heavy = null;
+		}
+	}
+}
+
+const handleDeleteAllForServerId = (serverId: number) => {
 	const gun = weapons.get(serverId);
 	if (gun) {
 		const {handgun, melee, heavy} = gun;
-		if (handgun) {
-			handgun.delete()
-		}
-		if (melee) {
-			melee.delete()
-		}
-		if (heavy) {
-			heavy.delete()
-		}
+
+		handgun?.delete()
+		melee?.delete()
+		heavy?.delete()
+		
 		weapons.delete(serverId);
 	}
 }
