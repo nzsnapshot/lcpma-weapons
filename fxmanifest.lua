@@ -3,11 +3,11 @@ game 'gta5'
 
 
 server_scripts {
-    'dist/server/*',
+    'dist/server/*.js',
 }
 
 client_script {
-    'dist/client/*'
+    'dist/client/*.js'
 }
 
 
