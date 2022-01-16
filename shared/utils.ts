@@ -1,7 +1,7 @@
 
 import { Model, Vector3 } from "@nativewrappers/client"
 
-enum WeaponCategory {
+export enum WeaponCategory {
 	Melee,
 	HandGuns,
 	SMG,

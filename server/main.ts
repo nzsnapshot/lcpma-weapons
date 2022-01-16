@@ -1,24 +1,16 @@
 import { WEAPON_LIST } from "../shared/utils";
+import { WEAPON_BAG_TYPES } from "../typings/weapons";
 
-RegisterCommand('resetmodel', (src: number) => {
-    let plyState = Player(src).state;
-    plyState.set('gunModel', 0, true);
-}, false)
+for (const stateBagName of WEAPON_BAG_TYPES) {
+	AddStateBagChangeHandler(stateBagName, null, async (bagName: string, _key: string, value: number, _reserved: number, _replicated: boolean) => {
+		const plySrc: number = Number(bagName.replace("player:", ''))
+		if (value == 0) {
+			return;
+		}
 
-RegisterCommand('setweapon', (src: number, args: unknown[]) => {
-	const hash = GetHashKey(args[0] as string);
-	let plyState = Player(src).state;
-	plyState.set('gunModel', hash, true);
-}, false)
-
-
-AddStateBagChangeHandler("gunModel", null, (bagName: string, key: string, value: number, reserved: number, replicated: boolean) => {
-	const plySrc: number = Number(bagName.replace("player:", ''))
-	if (value == 0) {
-		return;
-	}
-	const weaponInfo = WEAPON_LIST.get(value)
-	if(!weaponInfo) {
-		// Anticheat
-	};
-})
+		const weaponInfo = WEAPON_LIST.get(value)
+		if (!weaponInfo) {
+			console.log(`${plySrc} managed to have some invalid weapon synced!`)
+		}
+	})
+}

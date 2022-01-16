@@ -4,9 +4,10 @@
     "watch": "node build.dev.js"
   },
   "dependencies": {
-    "@nativewrappers/client": "^1.6.0",
     "@citizenfx/client": "^2.0.5208-1",
-    "@citizenfx/server": "^2.0.5208-1"
+    "@citizenfx/server": "^2.0.5208-1",
+    "@nativewrappers/client": "^1.6.1",
+    "node-fetch": "2"
   },
   "devDependencies": {
     "esbuild": "^0.14.11",
