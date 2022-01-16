@@ -1,4 +1,4 @@
-import { Model, World, Player as PlyObj, Prop } from "@nativewrappers/client"
+import { World, Player as PlyObj, Prop } from "@nativewrappers/client"
 import { WEAPON_LIST } from "../shared/utils";
 
 const Delay = (ms: number) => new Promise(res => setTimeout(res, ms));
@@ -35,7 +35,6 @@ AddStateBagChangeHandler("gunModel", null, async (bagName: string, key: string, 
 	);
 	guns.set(plySrc, weaponObj);
 })
-
 
 onNet("onPlayerDropped", (serverId: number) => {
 	// When the player is dropped we need to remove their weapons

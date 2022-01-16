@@ -7,7 +7,7 @@ server_scripts {
 }
 
 client_script {
-    'dist/client/*.js'
+    'dist/client/*'
 }
 
 
