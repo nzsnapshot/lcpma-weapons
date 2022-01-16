@@ -3032,7 +3032,7 @@
           SetBlipNameToPlayerName(this.handle, player.Handle);
         }
         get Entity() {
-          return Entity.fromHandle(GetBlipInfoIdEntityIndex(this.handle));
+          return Entity2.fromHandle(GetBlipInfoIdEntityIndex(this.handle));
         }
         set ShowHeadingIndicator(show) {
           ShowHeadingIndicatorOnBlip(this.handle, show);
@@ -4848,7 +4848,7 @@
   });
 
   // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/Entity.js
-  var Entity;
+  var Entity2;
   var init_Entity = __esm({
     "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/Entity.js"() {
       init_Blip2();
@@ -4857,7 +4857,7 @@
       init_Model();
       init_utils();
       init_models();
-      Entity = class {
+      Entity2 = class {
         constructor(handle) {
           this.handle = handle;
         }
@@ -5120,7 +5120,7 @@
           return IsEntityAttachedToEntity(this.handle, entity.Handle);
         }
         getEntityAttachedTo() {
-          return Entity.fromHandle(GetEntityAttachedTo(this.handle));
+          return Entity2.fromHandle(GetEntityAttachedTo(this.handle));
         }
         applyForce(direction, rotation, forceType = ForceType.MaxForceRot2) {
           ApplyForceToEntity(this.handle, Number(forceType), direction.x, direction.y, direction.z, rotation.x, rotation.y, rotation.z, 0, false, true, true, false, true);
@@ -5240,7 +5240,7 @@
           TaskAchieveHeading(this.ped.Handle, heading, timeout);
         }
         aimAt(target, duration) {
-          if (target instanceof Entity)
+          if (target instanceof Entity2)
             TaskAimGunAtEntity(this.ped.Handle, target.Handle, duration, false);
           else
             TaskAimGunAtCoord(this.ped.Handle, target.x, target.y, target.z, duration, false, false);
@@ -5343,7 +5343,7 @@
           }
         }
         lookAt(targetOrPosition, duration = -1) {
-          if (targetOrPosition instanceof Entity)
+          if (targetOrPosition instanceof Entity2)
             TaskLookAtEntity(this.ped.Handle, targetOrPosition.Handle, duration, 0, 2);
           else
             TaskLookAtCoord(this.ped.Handle, targetOrPosition.x, targetOrPosition.y, targetOrPosition.z, duration, 0, 2);
@@ -5407,7 +5407,7 @@
           TaskSwapWeapon(this.ped.Handle, false);
         }
         turnTo(targetOrPosition, duration = -1) {
-          if (targetOrPosition instanceof Entity)
+          if (targetOrPosition instanceof Entity2)
             TaskTurnPedToFaceEntity(this.ped.Handle, targetOrPosition.Handle, duration);
           else
             TaskTurnPedToFaceCoord(this.ped.Handle, targetOrPosition.x, targetOrPosition.y, targetOrPosition.z, duration);
@@ -8252,7 +8252,7 @@
       init_Tasks();
       init_models();
       init_WeaponCollection();
-      Ped = class extends Entity {
+      Ped = class extends Entity2 {
         constructor(handle) {
           super(handle);
           this.speechModifierNames = [
@@ -8635,7 +8635,7 @@
           return new Ped(GetMeleeTargetForPed(this.handle));
         }
         getKiller() {
-          return Entity.fromHandle(GetPedSourceOfDeath(this.handle));
+          return Entity2.fromHandle(GetPedSourceOfDeath(this.handle));
         }
         kill() {
           this.Health = -1;
@@ -8994,7 +8994,7 @@
         get EntityPlayerIsAimingAt() {
           const [entityHit, entity] = GetEntityPlayerIsFreeAimingAt(this.handle);
           if (entityHit) {
-            return Entity.fromHandle(entity);
+            return Entity2.fromHandle(entity);
           }
           return null;
         }
@@ -9053,7 +9053,7 @@
         get TargetEntity() {
           const [entityHit, entity] = GetPlayerTargetEntity(this.handle);
           if (entityHit) {
-            return Entity.fromHandle(entity);
+            return Entity2.fromHandle(entity);
           }
           return null;
         }
@@ -9072,7 +9072,7 @@
   var init_Prop = __esm({
     "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/Prop.js"() {
       init_models();
-      Prop = class extends Entity {
+      Prop = class extends Entity2 {
         static exists(prop) {
           return typeof prop !== "undefined" && prop.exists();
         }
@@ -9096,7 +9096,7 @@
       init_models();
       init_enums();
       init_Game();
-      Vehicle = class extends Entity {
+      Vehicle = class extends Entity2 {
         constructor(handle) {
           super(handle);
         }
@@ -10547,7 +10547,7 @@
           SetCamShakeAmplitude(this.handle, amplitude);
         }
         pointAt(target, offset = new Vector3(0, 0, 0)) {
-          if (target instanceof Entity) {
+          if (target instanceof Entity2) {
             PointCamAtEntity(this.handle, target.Handle, offset.x, offset.y, offset.z, true);
           } else if (target instanceof PedBone) {
             PointCamAtPedBone(this.handle, target.Owner.Handle, target.Index, offset.x, offset.y, offset.z, true);
@@ -10565,7 +10565,7 @@
           return IsCamInterpolating(this.handle);
         }
         attachTo(object, offset) {
-          if (object instanceof Entity) {
+          if (object instanceof Entity2) {
             AttachCamToEntity(this.handle, object.Handle, offset.x, offset.y, offset.z, true);
           } else if (object instanceof PedBone) {
             AttachCamToPedBone(this.handle, object.Owner.Handle, object.Index, offset.x, offset.y, offset.z, true);
@@ -14892,7 +14892,7 @@ ${word} `;
   });
 
   // client/states.ts
-  var weapons, handleMapSet, serverId, handleDeleteForServerId;
+  var weapons, handleMapSet, serverId, handleDeleteForServerId, handleDeleteAllForServerId;
   var init_states = __esm({
     "client/states.ts"() {
       init_lib();
@@ -14900,47 +14900,38 @@ ${word} `;
       init_weapons();
       init_utils3();
       weapons = /* @__PURE__ */ new Map();
-      on("onClientResourceStop", (resource) => {
+      on("onClientResourceStart", (resource) => {
         if (resource !== GetCurrentResourceName())
           return;
-        for (const [source] of weapons) {
-          handleDeleteForServerId(source);
-        }
+        GetGamePool("CObject").forEach((obj) => {
+          if (Entity(obj).state.isClientWeapon) {
+            SetEntityAsMissionEntity(obj, true, true);
+            DeleteEntity(obj);
+          }
+        });
+        LocalPlayer.state.set("weapons:melee", 0, true);
+        LocalPlayer.state.set("weapons:handGuns", 0, true);
+        LocalPlayer.state.set("weapons:heavy", 0, true);
       });
       handleMapSet = (plySrc, prop, weaponType) => {
         let weaponData = weapons.get(plySrc);
-        if (weaponData) {
-          if (weaponType === "weapons:melee") {
-            if (weaponData.melee) {
-              weaponData.melee.delete();
-            }
-            weaponData.melee = prop;
-          } else if (weaponType === "weapons:handGuns") {
-            if (weaponData.handgun) {
-              weaponData.handgun.delete();
-            }
-            weaponData.handgun = prop;
-          } else if (weaponType === "weapons:heavy") {
-            if (weaponData.heavy) {
-              weaponData.heavy.delete();
-            }
-            weaponData.heavy = prop;
-          }
-        } else {
-          let weaponData2 = {
-            melee: void 0,
-            handgun: void 0,
-            heavy: void 0
-          };
-          if (weaponType === "weapons:melee") {
-            weaponData2.melee = prop;
-          } else if (weaponType === "weapons:handGuns") {
-            weaponData2.handgun = prop;
-          } else if (weaponType === "weapons:heavy") {
-            weaponData2.heavy = prop;
-          }
-          weapons.set(plySrc, weaponData2);
+        weaponData = weaponData ? weaponData : {
+          melee: void 0,
+          handgun: void 0,
+          heavy: void 0
+        };
+        const { melee, handgun, heavy } = weaponData;
+        if (weaponType === "weapons:melee") {
+          melee == null ? void 0 : melee.delete();
+          weaponData.melee = prop;
+        } else if (weaponType === "weapons:handGuns") {
+          handgun == null ? void 0 : handgun.delete();
+          weaponData.handgun = prop;
+        } else if (weaponType === "weapons:heavy") {
+          heavy == null ? void 0 : heavy.delete();
+          weaponData.heavy = prop;
         }
+        weapons.set(plySrc, weaponData);
       };
       serverId = GetPlayerServerId(PlayerId());
       for (const stateBagName of WEAPON_BAG_TYPES) {
@@ -14948,8 +14939,9 @@ ${word} `;
           const plySrc = Number(bagName.replace("player:", ""));
           if (replicated && plySrc === serverId)
             return;
+          console.log(plySrc, stateBagName);
           if (value == 0) {
-            handleDeleteForServerId(plySrc);
+            handleDeleteForServerId(plySrc, stateBagName);
             return;
           }
           const weaponInfo = WEAPON_LIST.get(value);
@@ -14963,26 +14955,37 @@ ${word} `;
           const weaponObj = yield World.createProp(weaponInfo.model, ped.Position, true, true, false);
           if (!weaponObj)
             return;
+          Entity(weaponObj.Handle).state.set("isClientWeapon", true, false);
           handleMapSet(plySrc, weaponObj, stateBagName);
           weaponObj.attachToBone(ped.Bones.getBone(weaponInfo.bone), weaponInfo.offset, weaponInfo.rotation, false, true, false, 2);
         }));
       }
       onNet("onPlayerDropped", (serverId2) => {
-        handleDeleteForServerId(serverId2);
+        handleDeleteAllForServerId(serverId2);
       });
-      handleDeleteForServerId = (serverId2) => {
+      handleDeleteForServerId = (serverId2, weaponType) => {
+        const weaponData = weapons.get(serverId2);
+        if (weaponData) {
+          const { handgun, melee, heavy } = weaponData;
+          if (weaponType === "weapons:melee") {
+            melee == null ? void 0 : melee.delete();
+            weaponData.melee = null;
+          } else if (weaponType === "weapons:handGuns") {
+            handgun == null ? void 0 : handgun.delete();
+            weaponData.handgun = null;
+          } else if (weaponType === "weapons:heavy") {
+            heavy == null ? void 0 : heavy.delete();
+            weaponData.heavy = null;
+          }
+        }
+      };
+      handleDeleteAllForServerId = (serverId2) => {
         const gun = weapons.get(serverId2);
         if (gun) {
           const { handgun, melee, heavy } = gun;
-          if (handgun) {
-            handgun.delete();
-          }
-          if (melee) {
-            melee.delete();
-          }
-          if (heavy) {
-            heavy.delete();
-          }
+          handgun == null ? void 0 : handgun.delete();
+          melee == null ? void 0 : melee.delete();
+          heavy == null ? void 0 : heavy.delete();
           weapons.delete(serverId2);
         }
       };
@@ -15007,42 +15010,18 @@ ${word} `;
         for (const [hash, weaponData] of WEAPON_LIST) {
           if (!HasPedGotWeapon(ped.Handle, hash, false))
             continue;
-          if (currWeapon === hash) {
-            switch (weaponData.category) {
-              case 0 /* Melee */:
-                if (hash === currWeapon) {
-                  currentWeapons.melee = 0;
-                }
-                break;
-              case 1 /* HandGuns */:
-                if (hash === currWeapon) {
-                  currentWeapons.handgun = 0;
-                }
-                break;
-              default:
-                if (hash == currWeapon) {
-                  currentWeapons.heavy = 0;
-                }
-                break;
-            }
-          } else {
-            switch (weaponData.category) {
-              case 0 /* Melee */:
-                if (currentWeapons.melee === 0) {
-                  currentWeapons.melee = hash;
-                }
-                break;
-              case 1 /* HandGuns */:
-                if (currentWeapons.handgun === 0) {
-                  currentWeapons.handgun = hash;
-                }
-                break;
-              default:
-                if (currentWeapons.heavy === 0) {
-                  currentWeapons.heavy = hash;
-                }
-                break;
-            }
+          const weaponEquipped = currWeapon === hash;
+          let weaponHash = weaponEquipped ? 0 : hash;
+          switch (weaponData.category) {
+            case 0 /* Melee */:
+              currentWeapons.melee = weaponHash;
+              break;
+            case 1 /* HandGuns */:
+              currentWeapons.handgun = weaponHash;
+              break;
+            default:
+              currentWeapons.heavy = weaponHash;
+              break;
           }
         }
         if (LocalPlayer.state["weapons:melee"] !== currentWeapons.melee) {

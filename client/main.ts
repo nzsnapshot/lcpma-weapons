@@ -16,48 +16,22 @@ setTick(async () => {
 	const ped = Game.PlayerPed;
 	const currWeapon = GetSelectedPedWeapon(ped.Handle);
 
-
 	for (const [hash, weaponData] of WEAPON_LIST) {
 		if (!HasPedGotWeapon(ped.Handle, hash, false)) continue;
+		const weaponEquipped = currWeapon === hash;
+		let weaponHash = weaponEquipped ? 0 : hash
 
-		// TODO: Unduplicate this later
-		if (currWeapon === hash) {
-			switch (weaponData.category) {
-				case WeaponCategory.Melee:
-					if (hash  === currWeapon) {
-						currentWeapons.melee = 0;
-					}
-					break;
-				case WeaponCategory.HandGuns: 
-					if (hash === currWeapon) {
-						currentWeapons.handgun = 0;
-					}
-					break;
-				default:
-					if (hash == currWeapon) {
-						currentWeapons.heavy = 0;
-					}
-					break;
-			}
-		} else {
-			// Set the current weapon if there is not one currently set
-			switch (weaponData.category) {
-				case WeaponCategory.Melee:
-					if (currentWeapons.melee === 0) {
-						currentWeapons.melee = hash;
-					}
-					break;
-				case WeaponCategory.HandGuns: 
-					if (currentWeapons.handgun === 0) {
-						currentWeapons.handgun = hash;
-					}
-					break;
-				default:
-					if (currentWeapons.heavy === 0) {
-						currentWeapons.heavy = hash;
-					}
-					break;
-			}
+		// Set the current weapon if there is not one currently set
+		switch (weaponData.category) {
+			case WeaponCategory.Melee:
+				currentWeapons.melee = weaponHash;
+				break;
+			case WeaponCategory.HandGuns: 
+				currentWeapons.handgun = weaponHash;
+				break;
+			default:
+				currentWeapons.heavy = weaponHash;
+				break;
 		}
 	}
 
