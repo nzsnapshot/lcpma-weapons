@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+	  "noImplicitAny": true,
+	  "module": "commonjs",
+	  "target": "es6",
+	  "allowJs": true,
+	  "lib": ["es2017", "dom"],
+	  "types": ["@citizenfx/client"],
+	  "moduleResolution": "node",
+	  "sourceMap": true,
+	  "resolveJsonModule": true,
+	  "esModuleInterop": true
+	},
+	"include": ["./**/*"],
+	"exclude": ["**/node_modules", "**/__tests__/*"]
+  }
+  
