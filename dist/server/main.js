@@ -27,10 +27,387 @@
     });
   };
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/Audio.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/Vector3.js
+  var Vector3;
+  var init_Vector3 = __esm({
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/Vector3.js"() {
+      Vector3 = class {
+        constructor(x, y, z) {
+          this.x = x;
+          this.y = y;
+          this.z = z;
+        }
+        static create(v1) {
+          if (typeof v1 === "number") {
+            return new Vector3(v1, v1, v1);
+          }
+          return new Vector3(v1.x, v1.y, v1.z);
+        }
+        static fromArray(primitive) {
+          return new Vector3(primitive[0], primitive[1], primitive[2]);
+        }
+        static fromArrays(primitives) {
+          return primitives.map((prim) => new Vector3(prim[0], prim[1], prim[2]));
+        }
+        static clone(v1) {
+          return Vector3.create(v1);
+        }
+        static add(v1, v2) {
+          if (typeof v2 === "number") {
+            return new Vector3(v1.x + v2, v1.y + v2, v1.z + v2);
+          }
+          return new Vector3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
+        }
+        static subtract(v1, v2) {
+          return new Vector3(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
+        }
+        static multiply(v1, v2) {
+          if (typeof v2 === "number") {
+            return new Vector3(v1.x * v2, v1.y * v2, v1.z * v2);
+          }
+          return new Vector3(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
+        }
+        static divide(v1, v2) {
+          if (typeof v2 === "number") {
+            return new Vector3(v1.x / v2, v1.y / v2, v1.z / v2);
+          }
+          return new Vector3(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z);
+        }
+        static dotProduct(v1, v2) {
+          return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+        }
+        static crossProduct(v1, v2) {
+          const x = v1.y * v2.z - v1.z * v2.y;
+          const y = v1.z * v2.x - v1.z * v2.z;
+          const z = v1.x * v2.y - v1.z * v2.x;
+          return new Vector3(x, y, z);
+        }
+        static normalize(v) {
+          return Vector3.divide(v, v.Length);
+        }
+        clone() {
+          return new Vector3(this.x, this.y, this.z);
+        }
+        distanceSquared(v) {
+          const w = this.subtract(v);
+          return Vector3.dotProduct(w, w);
+        }
+        distance(v) {
+          return Math.sqrt(this.distanceSquared(v));
+        }
+        get normalize() {
+          return Vector3.normalize(this);
+        }
+        crossProduct(v) {
+          return Vector3.crossProduct(this, v);
+        }
+        dotProduct(v) {
+          return Vector3.dotProduct(this, v);
+        }
+        add(v) {
+          return Vector3.add(this, v);
+        }
+        subtract(v) {
+          return Vector3.subtract(this, v);
+        }
+        multiply(v) {
+          return Vector3.multiply(this, v);
+        }
+        divide(v) {
+          return Vector3.divide(this, v);
+        }
+        toArray() {
+          return [this.x, this.y, this.z];
+        }
+        replace(v) {
+          this.x = v.x;
+          this.y = v.y;
+          this.z = v.z;
+        }
+        get Length() {
+          return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+        }
+      };
+    }
+  });
+
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/Maths.js
+  var Maths;
+  var init_Maths = __esm({
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/Maths.js"() {
+      Maths = class {
+        static clamp(num, min, max) {
+          return num <= min ? min : num >= max ? max : num;
+        }
+        static getRandomInt(min, max) {
+          min = Math.ceil(min);
+          max = Math.floor(max);
+          return Math.floor(Math.random() * (max - min)) + min;
+        }
+      };
+    }
+  });
+
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/String.js
+  var String2;
+  var init_String = __esm({
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/String.js"() {
+      init_lib();
+      init_Maths();
+      String2 = class {
+        static stringToArray(input) {
+          let stringsNeeded = 1;
+          if (input.length > 99) {
+            stringsNeeded = Math.ceil(input.length / 99);
+          }
+          const outputString = new Array(stringsNeeded);
+          for (let i = 0; i < stringsNeeded; i++) {
+            outputString[i] = input.substring(i * 99, i * 99 + Maths.clamp(input.substring(i * 99).length, 0, 99));
+          }
+          return outputString;
+        }
+        static measureStringWidthNoConvert(input, font = Font.ChaletLondon, scale = 0) {
+          SetTextEntryForWidth("STRING");
+          Text.addLongString(input);
+          SetTextFont(font);
+          SetTextScale(1, scale);
+          return GetTextScreenWidth(false);
+        }
+        static measureString(str, font, scale, screenWidth = Screen.ScaledWidth) {
+          return this.measureStringWidthNoConvert(str, font, scale) * screenWidth;
+        }
+      };
+    }
+  });
+
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/LiteEvent.js
+  var LiteEvent;
+  var init_LiteEvent = __esm({
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/LiteEvent.js"() {
+      LiteEvent = class {
+        constructor() {
+          this.handlers = [];
+        }
+        on(handler) {
+          this.handlers.push(handler);
+        }
+        off(handler) {
+          this.handlers = this.handlers.filter((h) => h !== handler);
+        }
+        emit(...args) {
+          this.handlers.slice(0).forEach((h) => {
+            h(...args);
+          });
+        }
+        expose() {
+          return this;
+        }
+      };
+    }
+  });
+
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/PointF.js
+  var init_PointF = __esm({
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/PointF.js"() {
+    }
+  });
+
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/Crypto.js
+  var Crypto;
+  var init_Crypto = __esm({
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/Crypto.js"() {
+      Crypto = class {
+        static uuidv4() {
+          let uuid = "";
+          for (let ii = 0; ii < 32; ii += 1) {
+            switch (ii) {
+              case 8:
+              case 20:
+                uuid += "-";
+                uuid += (Math.random() * 16 | 0).toString(16);
+                break;
+              case 12:
+                uuid += "-";
+                uuid += "4";
+                break;
+              case 16:
+                uuid += "-";
+                uuid += (Math.random() * 4 | 8).toString(16);
+                break;
+              default:
+                uuid += (Math.random() * 16 | 0).toString(16);
+            }
+          }
+          return uuid;
+        }
+      };
+    }
+  });
+
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/Point.js
+  var Point;
+  var init_Point = __esm({
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/Point.js"() {
+      Point = class {
+        constructor(x = 0, y = 0) {
+          this.X = x;
+          this.Y = y;
+        }
+        static parse(arg) {
+          let point = new Point();
+          if (arg) {
+            if (typeof arg === "object") {
+              if (Array.isArray(arg)) {
+                if (arg.length === 2) {
+                  point = new Point(arg[0], arg[1]);
+                }
+              } else if (arg.X && arg.Y) {
+                point = new Point(arg.X, arg.Y);
+              }
+            } else {
+              if (arg.indexOf(",") !== -1) {
+                const arr = arg.split(",");
+                point = new Point(parseFloat(arr[0]), parseFloat(arr[1]));
+              }
+            }
+          }
+          return point;
+        }
+      };
+    }
+  });
+
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/Color.js
+  var Color;
+  var init_Color = __esm({
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/Color.js"() {
+      Color = class {
+        constructor(a = 255, r, g, b) {
+          this.a = a;
+          this.r = r;
+          this.g = g;
+          this.b = b;
+        }
+        static fromArgb(a, r, g, b) {
+          return new Color(a, r, g, b);
+        }
+        static fromRgb(r, g, b) {
+          return new Color(255, r, g, b);
+        }
+        static fromArray(primitive) {
+          return new Color(255, primitive[0], primitive[1], primitive[2]);
+        }
+      };
+      Color.empty = new Color(0, 0, 0, 0);
+      Color.transparent = new Color(0, 0, 0, 0);
+      Color.black = new Color(255, 0, 0, 0);
+      Color.white = new Color(255, 255, 255, 255);
+      Color.whiteSmoke = new Color(255, 245, 245, 245);
+    }
+  });
+
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/Size.js
+  var Size;
+  var init_Size = __esm({
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/Size.js"() {
+      Size = class {
+        constructor(w = 0, h = 0) {
+          this.width = w;
+          this.height = h;
+        }
+      };
+    }
+  });
+
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/Quaternion.js
+  var Quaternion;
+  var init_Quaternion = __esm({
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/Quaternion.js"() {
+      init_Vector3();
+      Quaternion = class {
+        constructor(valueXOrVector, yOrW, z, w) {
+          if (valueXOrVector instanceof Vector3) {
+            this.x = valueXOrVector.x;
+            this.y = valueXOrVector.y;
+            this.z = valueXOrVector.z;
+            this.w = yOrW !== null && yOrW !== void 0 ? yOrW : 0;
+          } else if (yOrW === void 0) {
+            this.x = valueXOrVector;
+            this.y = valueXOrVector;
+            this.z = valueXOrVector;
+            this.w = valueXOrVector;
+          } else {
+            this.x = valueXOrVector;
+            this.y = yOrW;
+            this.z = z !== null && z !== void 0 ? z : 0;
+            this.w = w !== null && w !== void 0 ? w : 0;
+          }
+        }
+      };
+    }
+  });
+
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/enumValues.js
+  function* enumValues(enumObj) {
+    let isStringEnum = true;
+    for (const property in enumObj) {
+      if (typeof enumObj[property] === "number") {
+        isStringEnum = false;
+        break;
+      }
+    }
+    for (const property in enumObj) {
+      if (isStringEnum || typeof enumObj[property] === "number") {
+        yield enumObj[property];
+      }
+    }
+  }
+  var init_enumValues = __esm({
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/enumValues.js"() {
+    }
+  });
+
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/getStringFromUInt8Array.js
+  var getStringFromUInt8Array;
+  var init_getStringFromUInt8Array = __esm({
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/getStringFromUInt8Array.js"() {
+      getStringFromUInt8Array = (buffer, start, end) => String.fromCharCode(...buffer.slice(start, end)).replace(/\u0000/g, "");
+    }
+  });
+
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/getUInt32FromUint8Array.js
+  var getUInt32FromUint8Array;
+  var init_getUInt32FromUint8Array = __esm({
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/getUInt32FromUint8Array.js"() {
+      getUInt32FromUint8Array = (buffer, start, end) => new Uint32Array(buffer.slice(start, end).buffer)[0];
+    }
+  });
+
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/index.js
+  var Wait;
+  var init_utils = __esm({
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/utils/index.js"() {
+      init_Vector3();
+      init_String();
+      init_LiteEvent();
+      init_PointF();
+      init_Crypto();
+      init_Point();
+      init_Color();
+      init_Maths();
+      init_Size();
+      init_Quaternion();
+      init_enumValues();
+      init_getStringFromUInt8Array();
+      init_getUInt32FromUint8Array();
+      Wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+    }
+  });
+
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/Audio.js
   var Audio;
   var init_Audio = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/Audio.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/Audio.js"() {
       Audio = class {
         static playSoundAt(position, sound, set, generateSoundId = true) {
           const SOUND_ID = generateSoundId ? GetSoundId() : -1;
@@ -124,10 +501,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Alignment.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Alignment.js
   var Alignment;
   var init_Alignment = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Alignment.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Alignment.js"() {
       (function(Alignment2) {
         Alignment2[Alignment2["Left"] = 0] = "Left";
         Alignment2[Alignment2["Centered"] = 1] = "Centered";
@@ -136,10 +513,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/AnimationFlags.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/AnimationFlags.js
   var AnimationFlags;
   var init_AnimationFlags = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/AnimationFlags.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/AnimationFlags.js"() {
       (function(AnimationFlags2) {
         AnimationFlags2[AnimationFlags2["None"] = 0] = "None";
         AnimationFlags2[AnimationFlags2["Loop"] = 1] = "Loop";
@@ -152,10 +529,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/AudioFlag.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/AudioFlag.js
   var AudioFlag;
   var init_AudioFlag = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/AudioFlag.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/AudioFlag.js"() {
       (function(AudioFlag2) {
         AudioFlag2[AudioFlag2["ActivateSwitchWheelAudio"] = 0] = "ActivateSwitchWheelAudio";
         AudioFlag2[AudioFlag2["AllowCutsceneOverScreenFade"] = 1] = "AllowCutsceneOverScreenFade";
@@ -196,10 +573,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/BadgeStyle.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/BadgeStyle.js
   var BadgeStyle;
   var init_BadgeStyle = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/BadgeStyle.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/BadgeStyle.js"() {
       (function(BadgeStyle2) {
         BadgeStyle2[BadgeStyle2["None"] = 0] = "None";
         BadgeStyle2[BadgeStyle2["Lock"] = 1] = "Lock";
@@ -385,10 +762,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Blip.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Blip.js
   var BlipColor, BlipSprite;
   var init_Blip = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Blip.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Blip.js"() {
       (function(BlipColor2) {
         BlipColor2[BlipColor2["White"] = 0] = "White";
         BlipColor2[BlipColor2["Red"] = 1] = "Red";
@@ -615,10 +992,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Bone.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Bone.js
   var Bone;
   var init_Bone = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Bone.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Bone.js"() {
       (function(Bone2) {
         Bone2[Bone2["SKEL_ROOT"] = 0] = "SKEL_ROOT";
         Bone2[Bone2["SKEL_Pelvis"] = 11816] = "SKEL_Pelvis";
@@ -722,10 +1099,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/CameraShake.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/CameraShake.js
   var CameraShake;
   var init_CameraShake = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/CameraShake.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/CameraShake.js"() {
       (function(CameraShake2) {
         CameraShake2[CameraShake2["Hand"] = 0] = "Hand";
         CameraShake2[CameraShake2["SmallExplosion"] = 1] = "SmallExplosion";
@@ -742,10 +1119,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/CheckboxStyle.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/CheckboxStyle.js
   var CheckboxStyle;
   var init_CheckboxStyle = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/CheckboxStyle.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/CheckboxStyle.js"() {
       (function(CheckboxStyle2) {
         CheckboxStyle2[CheckboxStyle2["Tick"] = 0] = "Tick";
         CheckboxStyle2[CheckboxStyle2["Cross"] = 1] = "Cross";
@@ -753,10 +1130,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Checkpoint.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Checkpoint.js
   var CheckpointIcon, CheckpointCustomIconStyle;
   var init_Checkpoint = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Checkpoint.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Checkpoint.js"() {
       (function(CheckpointIcon2) {
         CheckpointIcon2[CheckpointIcon2["CylinderSingleArrow"] = 0] = "CylinderSingleArrow";
         CheckpointIcon2[CheckpointIcon2["CylinderDoubleArrow"] = 1] = "CylinderDoubleArrow";
@@ -822,10 +1199,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/CloudHat.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/CloudHat.js
   var CloudHat;
   var init_CloudHat = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/CloudHat.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/CloudHat.js"() {
       (function(CloudHat2) {
         CloudHat2[CloudHat2["Unknown"] = 1] = "Unknown";
         CloudHat2[CloudHat2["Altostratus"] = 2] = "Altostratus";
@@ -852,10 +1229,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Control.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Control.js
   var Control;
   var init_Control = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Control.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Control.js"() {
       (function(Control2) {
         Control2[Control2["NextCamera"] = 0] = "NextCamera";
         Control2[Control2["LookLeftRight"] = 1] = "LookLeftRight";
@@ -1219,10 +1596,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/CursorSprite.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/CursorSprite.js
   var CursorSprite;
   var init_CursorSprite = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/CursorSprite.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/CursorSprite.js"() {
       (function(CursorSprite2) {
         CursorSprite2[CursorSprite2["Normal"] = 1] = "Normal";
         CursorSprite2[CursorSprite2["LightArrow"] = 2] = "LightArrow";
@@ -1240,10 +1617,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Driving.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Driving.js
   var DrivingStyle, VehicleDrivingFlags;
   var init_Driving = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Driving.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Driving.js"() {
       (function(DrivingStyle2) {
         DrivingStyle2[DrivingStyle2["None"] = 0] = "None";
         DrivingStyle2[DrivingStyle2["Normal"] = 786603] = "Normal";
@@ -1279,10 +1656,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/ExplosionType.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/ExplosionType.js
   var ExplosionType;
   var init_ExplosionType = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/ExplosionType.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/ExplosionType.js"() {
       (function(ExplosionType2) {
         ExplosionType2[ExplosionType2["Grenade"] = 0] = "Grenade";
         ExplosionType2[ExplosionType2["GrenadeL"] = 1] = "GrenadeL";
@@ -1327,10 +1704,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/FiringPattern.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/FiringPattern.js
   var FiringPattern;
   var init_FiringPattern = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/FiringPattern.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/FiringPattern.js"() {
       (function(FiringPattern2) {
         FiringPattern2[FiringPattern2["Default"] = 0] = "Default";
         FiringPattern2[FiringPattern2["FullAuto"] = 3337513804] = "FullAuto";
@@ -1353,10 +1730,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Font.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Font.js
   var Font;
   var init_Font = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Font.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Font.js"() {
       (function(Font2) {
         Font2[Font2["ChaletLondon"] = 0] = "ChaletLondon";
         Font2[Font2["HouseScript"] = 1] = "HouseScript";
@@ -1367,10 +1744,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/ForceType.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/ForceType.js
   var ForceType;
   var init_ForceType = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/ForceType.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/ForceType.js"() {
       (function(ForceType2) {
         ForceType2[ForceType2["MinForce"] = 0] = "MinForce";
         ForceType2[ForceType2["MaxForceRot"] = 1] = "MaxForceRot";
@@ -1382,10 +1759,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Gender.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Gender.js
   var Gender;
   var init_Gender = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Gender.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Gender.js"() {
       (function(Gender2) {
         Gender2[Gender2["Male"] = 0] = "Male";
         Gender2[Gender2["Female"] = 1] = "Female";
@@ -1393,10 +1770,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/HelmetType.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/HelmetType.js
   var HelmetType;
   var init_HelmetType = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/HelmetType.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/HelmetType.js"() {
       (function(HelmetType2) {
         HelmetType2[HelmetType2["RegularMotorcycleHelmet"] = 4096] = "RegularMotorcycleHelmet";
         HelmetType2[HelmetType2["FiremanHelmet"] = 16384] = "FiremanHelmet";
@@ -1405,10 +1782,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/HudColor.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/HudColor.js
   var HudColor;
   var init_HudColor = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/HudColor.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/HudColor.js"() {
       (function(HudColor2) {
         HudColor2[HudColor2["NONE"] = -1] = "NONE";
         HudColor2[HudColor2["HUD_COLOUR_PURE_WHITE"] = 0] = "HUD_COLOUR_PURE_WHITE";
@@ -1595,10 +1972,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/HudComponent.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/HudComponent.js
   var HudComponent;
   var init_HudComponent = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/HudComponent.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/HudComponent.js"() {
       (function(HudComponent2) {
         HudComponent2[HudComponent2["WantedStars"] = 1] = "WantedStars";
         HudComponent2[HudComponent2["WeaponIcon"] = 2] = "WeaponIcon";
@@ -1655,10 +2032,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/InputMode.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/InputMode.js
   var InputMode;
   var init_InputMode = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/InputMode.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/InputMode.js"() {
       (function(InputMode2) {
         InputMode2[InputMode2["MouseAndKeyboard"] = 0] = "MouseAndKeyboard";
         InputMode2[InputMode2["GamePad"] = 2] = "GamePad";
@@ -1666,10 +2043,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/IntersectOptions.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/IntersectOptions.js
   var IntersectOptions;
   var init_IntersectOptions = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/IntersectOptions.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/IntersectOptions.js"() {
       (function(IntersectOptions2) {
         IntersectOptions2[IntersectOptions2["Everything"] = -1] = "Everything";
         IntersectOptions2[IntersectOptions2["Map"] = 1] = "Map";
@@ -1685,10 +2062,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/InvertAxis.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/InvertAxis.js
   var InvertAxisFlags;
   var init_InvertAxis = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/InvertAxis.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/InvertAxis.js"() {
       (function(InvertAxisFlags2) {
         InvertAxisFlags2[InvertAxisFlags2["None"] = 0] = "None";
         InvertAxisFlags2[InvertAxisFlags2["X"] = 1] = "X";
@@ -1698,10 +2075,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Language.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Language.js
   var Language;
   var init_Language = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Language.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Language.js"() {
       (function(Language2) {
         Language2[Language2["American"] = 0] = "American";
         Language2[Language2["French"] = 1] = "French";
@@ -1719,10 +2096,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/LeaveVehicleFlags.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/LeaveVehicleFlags.js
   var LeaveVehicleFlags;
   var init_LeaveVehicleFlags = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/LeaveVehicleFlags.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/LeaveVehicleFlags.js"() {
       (function(LeaveVehicleFlags2) {
         LeaveVehicleFlags2[LeaveVehicleFlags2["None"] = 0] = "None";
         LeaveVehicleFlags2[LeaveVehicleFlags2["Normal"] = 1] = "Normal";
@@ -1736,10 +2113,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/LoadingSpinnerType.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/LoadingSpinnerType.js
   var LoadingSpinnerType;
   var init_LoadingSpinnerType = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/LoadingSpinnerType.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/LoadingSpinnerType.js"() {
       (function(LoadingSpinnerType2) {
         LoadingSpinnerType2[LoadingSpinnerType2["Clockwise1"] = 1] = "Clockwise1";
         LoadingSpinnerType2[LoadingSpinnerType2["Clockwise2"] = 2] = "Clockwise2";
@@ -1750,10 +2127,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/MarkerType.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/MarkerType.js
   var MarkerType;
   var init_MarkerType = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/MarkerType.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/MarkerType.js"() {
       (function(MarkerType2) {
         MarkerType2[MarkerType2["UpsideDownCone"] = 0] = "UpsideDownCone";
         MarkerType2[MarkerType2["VerticalCylinder"] = 1] = "VerticalCylinder";
@@ -1801,10 +2178,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/MenuAlignment.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/MenuAlignment.js
   var MenuAlignment;
   var init_MenuAlignment = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/MenuAlignment.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/MenuAlignment.js"() {
       (function(MenuAlignment2) {
         MenuAlignment2[MenuAlignment2["Left"] = 76] = "Left";
         MenuAlignment2[MenuAlignment2["Right"] = 82] = "Right";
@@ -1812,10 +2189,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/NotificationType.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/NotificationType.js
   var NotificationType;
   var init_NotificationType = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/NotificationType.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/NotificationType.js"() {
       (function(NotificationType2) {
         NotificationType2[NotificationType2["Default"] = 0] = "Default";
         NotificationType2[NotificationType2["Bubble"] = 1] = "Bubble";
@@ -1829,10 +2206,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Parachute.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Parachute.js
   var ParachuteLandingType, ParachuteState;
   var init_Parachute = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Parachute.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Parachute.js"() {
       (function(ParachuteLandingType2) {
         ParachuteLandingType2[ParachuteLandingType2["None"] = -1] = "None";
         ParachuteLandingType2[ParachuteLandingType2["Stumbling"] = 1] = "Stumbling";
@@ -1849,10 +2226,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/RadioStation.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/RadioStation.js
   var RadioStation;
   var init_RadioStation = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/RadioStation.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/RadioStation.js"() {
       (function(RadioStation2) {
         RadioStation2["LosSantosRockRadio"] = "RADIO_01_CLASS_ROCK";
         RadioStation2["NonStopPopFM"] = "RADIO_02_POP";
@@ -1880,10 +2257,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/RagdollType.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/RagdollType.js
   var RagdollType;
   var init_RagdollType = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/RagdollType.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/RagdollType.js"() {
       (function(RagdollType2) {
         RagdollType2[RagdollType2["Normal"] = 0] = "Normal";
         RagdollType2[RagdollType2["StiffLegs"] = 1] = "StiffLegs";
@@ -1893,10 +2270,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Relationship.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Relationship.js
   var Relationship;
   var init_Relationship = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Relationship.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Relationship.js"() {
       (function(Relationship2) {
         Relationship2[Relationship2["Hate"] = 5] = "Hate";
         Relationship2[Relationship2["Dislike"] = 4] = "Dislike";
@@ -1909,10 +2286,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/RopeType.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/RopeType.js
   var RopeType;
   var init_RopeType = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/RopeType.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/RopeType.js"() {
       (function(RopeType2) {
         RopeType2[RopeType2["ThickRope"] = 4] = "ThickRope";
         RopeType2[RopeType2["ThinMetalWire"] = 5] = "ThinMetalWire";
@@ -1920,10 +2297,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/ScreenEffect.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/ScreenEffect.js
   var ScreenEffect;
   var init_ScreenEffect = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/ScreenEffect.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/ScreenEffect.js"() {
       (function(ScreenEffect2) {
         ScreenEffect2[ScreenEffect2["SwitchHudIn"] = 0] = "SwitchHudIn";
         ScreenEffect2[ScreenEffect2["SwitchHudOut"] = 1] = "SwitchHudOut";
@@ -2010,10 +2387,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/SpeechModifier.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/SpeechModifier.js
   var SpeechModifier;
   var init_SpeechModifier = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/SpeechModifier.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/SpeechModifier.js"() {
       (function(SpeechModifier2) {
         SpeechModifier2[SpeechModifier2["Standard"] = 0] = "Standard";
         SpeechModifier2[SpeechModifier2["AllowRepeat"] = 1] = "AllowRepeat";
@@ -2056,10 +2433,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Vehicle.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Vehicle.js
   var CargobobHook, LicensePlateStyle, LicensePlateType, VehicleClass, VehicleColor, VehicleLandingGearState, VehicleLockStatus, VehicleNeonLight, VehicleRoofState, VehicleSeat, VehicleWindowTint, VehicleWindowIndex, VehicleModType, VehicleToggleModType, VehiclePaintType, VehicleDoorIndex, VehicleWheelType, VehicleWheelIndex;
   var init_Vehicle = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Vehicle.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Vehicle.js"() {
       (function(CargobobHook2) {
         CargobobHook2[CargobobHook2["Hook"] = 0] = "Hook";
         CargobobHook2[CargobobHook2["Magnet"] = 1] = "Magnet";
@@ -2421,10 +2798,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Weather.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Weather.js
   var Weather;
   var init_Weather = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/Weather.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/Weather.js"() {
       (function(Weather2) {
         Weather2[Weather2["Unknown"] = -1] = "Unknown";
         Weather2[Weather2["ExtraSunny"] = 0] = "ExtraSunny";
@@ -2446,10 +2823,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/ZoneID.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/ZoneID.js
   var ZoneID;
   var init_ZoneID = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/ZoneID.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/ZoneID.js"() {
       (function(ZoneID2) {
         ZoneID2[ZoneID2["AIRP"] = 0] = "AIRP";
         ZoneID2[ZoneID2["ALAMO"] = 1] = "ALAMO";
@@ -2544,9 +2921,9 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/index.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/index.js
   var init_enums = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/enums/index.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/enums/index.js"() {
       init_Alignment();
       init_AnimationFlags();
       init_AudioFlag();
@@ -2590,387 +2967,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/Vector3.js
-  var Vector3;
-  var init_Vector3 = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/Vector3.js"() {
-      Vector3 = class {
-        constructor(x, y, z) {
-          this.x = x;
-          this.y = y;
-          this.z = z;
-        }
-        static create(v1) {
-          if (typeof v1 === "number") {
-            return new Vector3(v1, v1, v1);
-          }
-          return new Vector3(v1.x, v1.y, v1.z);
-        }
-        static fromArray(primitive) {
-          return new Vector3(primitive[0], primitive[1], primitive[2]);
-        }
-        static fromArrays(primitives) {
-          return primitives.map((prim) => new Vector3(prim[0], prim[1], prim[2]));
-        }
-        static clone(v1) {
-          return Vector3.create(v1);
-        }
-        static add(v1, v2) {
-          if (typeof v2 === "number") {
-            return new Vector3(v1.x + v2, v1.y + v2, v1.z + v2);
-          }
-          return new Vector3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
-        }
-        static subtract(v1, v2) {
-          return new Vector3(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
-        }
-        static multiply(v1, v2) {
-          if (typeof v2 === "number") {
-            return new Vector3(v1.x * v2, v1.y * v2, v1.z * v2);
-          }
-          return new Vector3(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
-        }
-        static divide(v1, v2) {
-          if (typeof v2 === "number") {
-            return new Vector3(v1.x / v2, v1.y / v2, v1.z / v2);
-          }
-          return new Vector3(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z);
-        }
-        static dotProduct(v1, v2) {
-          return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
-        }
-        static crossProduct(v1, v2) {
-          const x = v1.y * v2.z - v1.z * v2.y;
-          const y = v1.z * v2.x - v1.z * v2.z;
-          const z = v1.x * v2.y - v1.z * v2.x;
-          return new Vector3(x, y, z);
-        }
-        static normalize(v) {
-          return Vector3.divide(v, v.Length);
-        }
-        clone() {
-          return new Vector3(this.x, this.y, this.z);
-        }
-        distanceSquared(v) {
-          const w = this.subtract(v);
-          return Vector3.dotProduct(w, w);
-        }
-        distance(v) {
-          return Math.sqrt(this.distanceSquared(v));
-        }
-        get normalize() {
-          return Vector3.normalize(this);
-        }
-        crossProduct(v) {
-          return Vector3.crossProduct(this, v);
-        }
-        dotProduct(v) {
-          return Vector3.dotProduct(this, v);
-        }
-        add(v) {
-          return Vector3.add(this, v);
-        }
-        subtract(v) {
-          return Vector3.subtract(this, v);
-        }
-        multiply(v) {
-          return Vector3.multiply(this, v);
-        }
-        divide(v) {
-          return Vector3.divide(this, v);
-        }
-        toArray() {
-          return [this.x, this.y, this.z];
-        }
-        replace(v) {
-          this.x = v.x;
-          this.y = v.y;
-          this.z = v.z;
-        }
-        get Length() {
-          return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
-        }
-      };
-    }
-  });
-
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/Maths.js
-  var Maths;
-  var init_Maths = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/Maths.js"() {
-      Maths = class {
-        static clamp(num, min, max) {
-          return num <= min ? min : num >= max ? max : num;
-        }
-        static getRandomInt(min, max) {
-          min = Math.ceil(min);
-          max = Math.floor(max);
-          return Math.floor(Math.random() * (max - min)) + min;
-        }
-      };
-    }
-  });
-
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/String.js
-  var String2;
-  var init_String = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/String.js"() {
-      init_lib();
-      init_Maths();
-      String2 = class {
-        static stringToArray(input) {
-          let stringsNeeded = 1;
-          if (input.length > 99) {
-            stringsNeeded = Math.ceil(input.length / 99);
-          }
-          const outputString = new Array(stringsNeeded);
-          for (let i = 0; i < stringsNeeded; i++) {
-            outputString[i] = input.substring(i * 99, i * 99 + Maths.clamp(input.substring(i * 99).length, 0, 99));
-          }
-          return outputString;
-        }
-        static measureStringWidthNoConvert(input, font = Font.ChaletLondon, scale = 0) {
-          SetTextEntryForWidth("STRING");
-          Text.addLongString(input);
-          SetTextFont(font);
-          SetTextScale(1, scale);
-          return GetTextScreenWidth(false);
-        }
-        static measureString(str, font, scale, screenWidth = Screen.ScaledWidth) {
-          return this.measureStringWidthNoConvert(str, font, scale) * screenWidth;
-        }
-      };
-    }
-  });
-
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/LiteEvent.js
-  var LiteEvent;
-  var init_LiteEvent = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/LiteEvent.js"() {
-      LiteEvent = class {
-        constructor() {
-          this.handlers = [];
-        }
-        on(handler) {
-          this.handlers.push(handler);
-        }
-        off(handler) {
-          this.handlers = this.handlers.filter((h) => h !== handler);
-        }
-        emit(...args) {
-          this.handlers.slice(0).forEach((h) => {
-            h(...args);
-          });
-        }
-        expose() {
-          return this;
-        }
-      };
-    }
-  });
-
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/PointF.js
-  var init_PointF = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/PointF.js"() {
-    }
-  });
-
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/Crypto.js
-  var Crypto;
-  var init_Crypto = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/Crypto.js"() {
-      Crypto = class {
-        static uuidv4() {
-          let uuid = "";
-          for (let ii = 0; ii < 32; ii += 1) {
-            switch (ii) {
-              case 8:
-              case 20:
-                uuid += "-";
-                uuid += (Math.random() * 16 | 0).toString(16);
-                break;
-              case 12:
-                uuid += "-";
-                uuid += "4";
-                break;
-              case 16:
-                uuid += "-";
-                uuid += (Math.random() * 4 | 8).toString(16);
-                break;
-              default:
-                uuid += (Math.random() * 16 | 0).toString(16);
-            }
-          }
-          return uuid;
-        }
-      };
-    }
-  });
-
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/Point.js
-  var Point;
-  var init_Point = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/Point.js"() {
-      Point = class {
-        constructor(x = 0, y = 0) {
-          this.X = x;
-          this.Y = y;
-        }
-        static parse(arg) {
-          let point = new Point();
-          if (arg) {
-            if (typeof arg === "object") {
-              if (Array.isArray(arg)) {
-                if (arg.length === 2) {
-                  point = new Point(arg[0], arg[1]);
-                }
-              } else if (arg.X && arg.Y) {
-                point = new Point(arg.X, arg.Y);
-              }
-            } else {
-              if (arg.indexOf(",") !== -1) {
-                const arr = arg.split(",");
-                point = new Point(parseFloat(arr[0]), parseFloat(arr[1]));
-              }
-            }
-          }
-          return point;
-        }
-      };
-    }
-  });
-
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/Color.js
-  var Color;
-  var init_Color = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/Color.js"() {
-      Color = class {
-        constructor(a = 255, r, g, b) {
-          this.a = a;
-          this.r = r;
-          this.g = g;
-          this.b = b;
-        }
-        static fromArgb(a, r, g, b) {
-          return new Color(a, r, g, b);
-        }
-        static fromRgb(r, g, b) {
-          return new Color(255, r, g, b);
-        }
-        static fromArray(primitive) {
-          return new Color(255, primitive[0], primitive[1], primitive[2]);
-        }
-      };
-      Color.empty = new Color(0, 0, 0, 0);
-      Color.transparent = new Color(0, 0, 0, 0);
-      Color.black = new Color(255, 0, 0, 0);
-      Color.white = new Color(255, 255, 255, 255);
-      Color.whiteSmoke = new Color(255, 245, 245, 245);
-    }
-  });
-
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/Size.js
-  var Size;
-  var init_Size = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/Size.js"() {
-      Size = class {
-        constructor(w = 0, h = 0) {
-          this.width = w;
-          this.height = h;
-        }
-      };
-    }
-  });
-
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/Quaternion.js
-  var Quaternion;
-  var init_Quaternion = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/Quaternion.js"() {
-      init_Vector3();
-      Quaternion = class {
-        constructor(valueXOrVector, yOrW, z, w) {
-          if (valueXOrVector instanceof Vector3) {
-            this.x = valueXOrVector.x;
-            this.y = valueXOrVector.y;
-            this.z = valueXOrVector.z;
-            this.w = yOrW !== null && yOrW !== void 0 ? yOrW : 0;
-          } else if (yOrW === void 0) {
-            this.x = valueXOrVector;
-            this.y = valueXOrVector;
-            this.z = valueXOrVector;
-            this.w = valueXOrVector;
-          } else {
-            this.x = valueXOrVector;
-            this.y = yOrW;
-            this.z = z !== null && z !== void 0 ? z : 0;
-            this.w = w !== null && w !== void 0 ? w : 0;
-          }
-        }
-      };
-    }
-  });
-
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/enumValues.js
-  function* enumValues(enumObj) {
-    let isStringEnum = true;
-    for (const property in enumObj) {
-      if (typeof enumObj[property] === "number") {
-        isStringEnum = false;
-        break;
-      }
-    }
-    for (const property in enumObj) {
-      if (isStringEnum || typeof enumObj[property] === "number") {
-        yield enumObj[property];
-      }
-    }
-  }
-  var init_enumValues = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/enumValues.js"() {
-    }
-  });
-
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/getStringFromUInt8Array.js
-  var getStringFromUInt8Array;
-  var init_getStringFromUInt8Array = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/getStringFromUInt8Array.js"() {
-      getStringFromUInt8Array = (buffer, start, end) => String.fromCharCode(...buffer.slice(start, end)).replace(/\u0000/g, "");
-    }
-  });
-
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/getUInt32FromUint8Array.js
-  var getUInt32FromUint8Array;
-  var init_getUInt32FromUint8Array = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/getUInt32FromUint8Array.js"() {
-      getUInt32FromUint8Array = (buffer, start, end) => new Uint32Array(buffer.slice(start, end).buffer)[0];
-    }
-  });
-
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/index.js
-  var Wait;
-  var init_utils = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/utils/index.js"() {
-      init_Vector3();
-      init_String();
-      init_LiteEvent();
-      init_PointF();
-      init_Crypto();
-      init_Point();
-      init_Color();
-      init_Maths();
-      init_Size();
-      init_Quaternion();
-      init_enumValues();
-      init_getStringFromUInt8Array();
-      init_getUInt32FromUint8Array();
-      Wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
-    }
-  });
-
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/Blip.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/Blip.js
   var Blip;
   var init_Blip2 = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/Blip.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/Blip.js"() {
       init_utils();
       init_models();
       Blip = class {
@@ -3032,7 +3032,7 @@
           SetBlipNameToPlayerName(this.handle, player.Handle);
         }
         get Entity() {
-          return Entity.fromHandle(GetBlipInfoIdEntityIndex(this.handle));
+          return Entity2.fromHandle(GetBlipInfoIdEntityIndex(this.handle));
         }
         set ShowHeadingIndicator(show) {
           ShowHeadingIndicatorOnBlip(this.handle, show);
@@ -3079,10 +3079,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/hashes/MaterialHash.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/hashes/MaterialHash.js
   var MaterialHash;
   var init_MaterialHash = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/hashes/MaterialHash.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/hashes/MaterialHash.js"() {
       (function(MaterialHash2) {
         MaterialHash2[MaterialHash2["None"] = 0] = "None";
         MaterialHash2[MaterialHash2["Unk"] = 2519482235] = "Unk";
@@ -3302,10 +3302,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/hashes/PedHash.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/hashes/PedHash.js
   var PedHash;
   var init_PedHash = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/hashes/PedHash.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/hashes/PedHash.js"() {
       (function(PedHash2) {
         PedHash2[PedHash2["Michael"] = 225514697] = "Michael";
         PedHash2[PedHash2["Franklin"] = 2602752943] = "Franklin";
@@ -4033,10 +4033,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/hashes/VehicleHash.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/hashes/VehicleHash.js
   var VehicleHash;
   var init_VehicleHash = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/hashes/VehicleHash.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/hashes/VehicleHash.js"() {
       (function(VehicleHash2) {
         VehicleHash2[VehicleHash2["Adder"] = 3078201489] = "Adder";
         VehicleHash2[VehicleHash2["Airbus"] = 1283517198] = "Airbus";
@@ -4562,10 +4562,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/hashes/WeaponHash.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/hashes/WeaponHash.js
   var WeaponHash, VehicleWeaponHash, AmmoType;
   var init_WeaponHash = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/hashes/WeaponHash.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/hashes/WeaponHash.js"() {
       (function(WeaponHash2) {
         WeaponHash2[WeaponHash2["Dagger"] = -1834847097] = "Dagger";
         WeaponHash2[WeaponHash2["Bat"] = -1786099057] = "Bat";
@@ -4716,10 +4716,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/hashes/WeatherTypeHash.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/hashes/WeatherTypeHash.js
   var WeatherTypeHash;
   var init_WeatherTypeHash = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/hashes/WeatherTypeHash.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/hashes/WeatherTypeHash.js"() {
       (function(WeatherTypeHash2) {
         WeatherTypeHash2[WeatherTypeHash2["Unknown"] = -1] = "Unknown";
         WeatherTypeHash2[WeatherTypeHash2["ExtraSunny"] = -1750463879] = "ExtraSunny";
@@ -4741,9 +4741,9 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/hashes/index.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/hashes/index.js
   var init_hashes = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/hashes/index.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/hashes/index.js"() {
       init_MaterialHash();
       init_PedHash();
       init_VehicleHash();
@@ -4752,10 +4752,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/Model.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/Model.js
   var Model;
   var init_Model = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/Model.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/Model.js"() {
       init_Game();
       init_hashes();
       init_utils();
@@ -4847,18 +4847,28 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/Entity.js
-  var Entity;
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/cfx/index.js
+  var cfx_default;
+  var init_cfx = __esm({
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/cfx/index.js"() {
+      cfx_default = { Entity, Player };
+    }
+  });
+
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/Entity.js
+  var Entity2;
   var init_Entity = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/Entity.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/Entity.js"() {
       init_Blip2();
       init_enums();
       init_Game();
       init_Model();
       init_utils();
       init_models();
-      Entity = class {
+      init_cfx();
+      Entity2 = class {
         constructor(handle) {
+          this.stateBagCookies = [];
           this.handle = handle;
         }
         static fromHandle(handle) {
@@ -4880,6 +4890,26 @@
         }
         get NetworkId() {
           return NetworkGetNetworkIdFromEntity(this.handle);
+        }
+        get State() {
+          return cfx_default.Entity(this.handle).state;
+        }
+        AddStateBagChangeHandler(keyFilter, handler) {
+          const stateBagName = NetworkGetEntityIsNetworked(this.handle) ? `entity:${this.NetworkId}` : `localEntity:${this.handle}`;
+          const cookie = AddStateBagChangeHandler(keyFilter, stateBagName, handler);
+          this.stateBagCookies.push(cookie);
+          return cookie;
+        }
+        listenForStateChange(keyFilter, handler) {
+          return this.AddStateBagChangeHandler(keyFilter, handler);
+        }
+        removeStateListener(tgtCookie) {
+          this.stateBagCookies = this.stateBagCookies.filter((cookie) => {
+            const isCookie = cookie == tgtCookie;
+            if (isCookie)
+              RemoveStateBagChangeHandler(cookie);
+            return isCookie;
+          });
         }
         get Health() {
           return GetEntityHealth(this.handle);
@@ -5120,7 +5150,7 @@
           return IsEntityAttachedToEntity(this.handle, entity.Handle);
         }
         getEntityAttachedTo() {
-          return Entity.fromHandle(GetEntityAttachedTo(this.handle));
+          return Entity2.fromHandle(GetEntityAttachedTo(this.handle));
         }
         applyForce(direction, rotation, forceType = ForceType.MaxForceRot2) {
           ApplyForceToEntity(this.handle, Number(forceType), direction.x, direction.y, direction.z, rotation.x, rotation.y, rotation.z, 0, false, true, true, false, true);
@@ -5138,6 +5168,9 @@
           if (this.handle !== Game.PlayerPed.Handle) {
             SetEntityAsMissionEntity(this.handle, false, true);
             DeleteEntity(this.handle);
+            for (const cookie of this.stateBagCookies) {
+              RemoveStateBagChangeHandler(cookie);
+            }
           }
         }
         markAsNoLongerNeeded() {
@@ -5148,10 +5181,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/EntityBone.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/EntityBone.js
   var EntityBone;
   var init_EntityBone = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/EntityBone.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/EntityBone.js"() {
       init_utils();
       EntityBone = class {
         constructor(owner, boneIndex, boneName) {
@@ -5175,10 +5208,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/EntityBoneCollection.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/EntityBoneCollection.js
   var EntityBoneCollection;
   var init_EntityBoneCollection = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/EntityBoneCollection.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/EntityBoneCollection.js"() {
       init_models();
       EntityBoneCollection = class {
         constructor(owner) {
@@ -5198,10 +5231,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/Tasks.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/Tasks.js
   var __awaiter, Tasks;
   var init_Tasks = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/Tasks.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/Tasks.js"() {
       init_enums();
       init_models();
       init_utils();
@@ -5240,7 +5273,7 @@
           TaskAchieveHeading(this.ped.Handle, heading, timeout);
         }
         aimAt(target, duration) {
-          if (target instanceof Entity)
+          if (target instanceof Entity2)
             TaskAimGunAtEntity(this.ped.Handle, target.Handle, duration, false);
           else
             TaskAimGunAtCoord(this.ped.Handle, target.x, target.y, target.z, duration, false, false);
@@ -5343,7 +5376,7 @@
           }
         }
         lookAt(targetOrPosition, duration = -1) {
-          if (targetOrPosition instanceof Entity)
+          if (targetOrPosition instanceof Entity2)
             TaskLookAtEntity(this.ped.Handle, targetOrPosition.Handle, duration, 0, 2);
           else
             TaskLookAtCoord(this.ped.Handle, targetOrPosition.x, targetOrPosition.y, targetOrPosition.z, duration, 0, 2);
@@ -5407,7 +5440,7 @@
           TaskSwapWeapon(this.ped.Handle, false);
         }
         turnTo(targetOrPosition, duration = -1) {
-          if (targetOrPosition instanceof Entity)
+          if (targetOrPosition instanceof Entity2)
             TaskTurnPedToFaceEntity(this.ped.Handle, targetOrPosition.Handle, duration);
           else
             TaskTurnPedToFaceCoord(this.ped.Handle, targetOrPosition.x, targetOrPosition.y, targetOrPosition.z, duration);
@@ -5464,10 +5497,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/WeaponComponentHash.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/WeaponComponentHash.js
   var WeaponComponentHash;
   var init_WeaponComponentHash = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/WeaponComponentHash.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/WeaponComponentHash.js"() {
       (function(WeaponComponentHash2) {
         WeaponComponentHash2[WeaponComponentHash2["COMPONENT_KNUCKLE_VARMOD_BASE"] = 4081463091] = "COMPONENT_KNUCKLE_VARMOD_BASE";
         WeaponComponentHash2[WeaponComponentHash2["COMPONENT_KNUCKLE_VARMOD_PIMP"] = 3323197061] = "COMPONENT_KNUCKLE_VARMOD_PIMP";
@@ -6137,10 +6170,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/ComponentAttachmentPoint.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/ComponentAttachmentPoint.js
   var ComponentAttachmentPoint;
   var init_ComponentAttachmentPoint = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/ComponentAttachmentPoint.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/ComponentAttachmentPoint.js"() {
       (function(ComponentAttachmentPoint2) {
         ComponentAttachmentPoint2[ComponentAttachmentPoint2["Invalid"] = 4294967295] = "Invalid";
         ComponentAttachmentPoint2[ComponentAttachmentPoint2["Clip"] = 3723347892] = "Clip";
@@ -6162,7 +6195,7 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/DlcWeaponComponentData.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/DlcWeaponComponentData.js
   function initializeOnce() {
     let isInitialized = false;
     return function() {
@@ -6195,14 +6228,14 @@
   }
   var DlcWeaponComponentData;
   var init_DlcWeaponComponentData = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/DlcWeaponComponentData.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/DlcWeaponComponentData.js"() {
       init_utils();
       DlcWeaponComponentData = /* @__PURE__ */ new Map();
       initializeOnce()();
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/ComponentDisplayNameByHash.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/ComponentDisplayNameByHash.js
   function initializeOnce2() {
     let isInitialized = false;
     return function() {
@@ -6217,7 +6250,7 @@
   }
   var ComponentDisplayNameByHash;
   var init_ComponentDisplayNameByHash = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/ComponentDisplayNameByHash.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/ComponentDisplayNameByHash.js"() {
       init_WeaponComponentHash();
       init_DlcWeaponComponentData();
       ComponentDisplayNameByHash = /* @__PURE__ */ new Map([
@@ -6471,7 +6504,7 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/WeaponComponentHashesByWeaponHash.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/WeaponComponentHashesByWeaponHash.js
   function initializeOnce3() {
     let isInitialized = false;
     return function() {
@@ -6500,7 +6533,7 @@
   }
   var WeaponComponentHashesByWeaponHash;
   var init_WeaponComponentHashesByWeaponHash = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/WeaponComponentHashesByWeaponHash.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/WeaponComponentHashesByWeaponHash.js"() {
       init_hashes();
       init_WeaponComponentHash();
       init_utils();
@@ -7281,7 +7314,7 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/ComponentAttachmentPointByHash.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/ComponentAttachmentPointByHash.js
   function initializeOnce4() {
     let isInitialized = false;
     return function() {
@@ -7296,7 +7329,7 @@
   }
   var ComponentAttachmentPointByHash;
   var init_ComponentAttachmentPointByHash = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/ComponentAttachmentPointByHash.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/ComponentAttachmentPointByHash.js"() {
       init_WeaponComponentHash();
       init_ComponentAttachmentPoint();
       init_DlcWeaponComponentData();
@@ -7589,7 +7622,7 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/WeaponComponentHudStats.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/WeaponComponentHudStats.js
   function initializeOnce5() {
     let isInitialized = false;
     return function() {
@@ -7614,7 +7647,7 @@
   }
   var WeaponComponentHudStats;
   var init_WeaponComponentHudStats = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/WeaponComponentHudStats.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/WeaponComponentHudStats.js"() {
       init_WeaponComponentHash();
       init_utils();
       init_utils();
@@ -7623,10 +7656,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/WeaponComponent.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/WeaponComponent.js
   var WeaponComponent;
   var init_WeaponComponent = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/WeaponComponent.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/WeaponComponent.js"() {
       init_WeaponComponentHash();
       init_ComponentAttachmentPoint();
       init_Game();
@@ -7690,10 +7723,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/InvalidWeaponComponent.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/InvalidWeaponComponent.js
   var InvalidWeaponComponent;
   var init_InvalidWeaponComponent = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/InvalidWeaponComponent.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/InvalidWeaponComponent.js"() {
       init_WeaponComponent();
       init_WeaponComponentHash();
       init_ComponentAttachmentPoint();
@@ -7720,10 +7753,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/WeaponComponentCollection.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/WeaponComponentCollection.js
   var WeaponComponentCollection;
   var init_WeaponComponentCollection = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/WeaponComponentCollection.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/WeaponComponentCollection.js"() {
       init_WeaponComponent();
       init_InvalidWeaponComponent();
       init_WeaponComponentHashesByWeaponHash();
@@ -7815,7 +7848,7 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/DlcWeaponData.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/DlcWeaponData.js
   function initializeOnce6() {
     let isInitialized = false;
     return function() {
@@ -7848,7 +7881,7 @@
   }
   var DlcWeaponData;
   var init_DlcWeaponData = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/DlcWeaponData.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/DlcWeaponData.js"() {
       init_utils();
       init_utils();
       DlcWeaponData = /* @__PURE__ */ new Map();
@@ -7856,7 +7889,7 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/WeaponDisplayNameByHash.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/WeaponDisplayNameByHash.js
   function initializeOnce7() {
     let isInitialized = false;
     return function() {
@@ -7871,7 +7904,7 @@
   }
   var WeaponDisplayNameByHash;
   var init_WeaponDisplayNameByHash = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/WeaponDisplayNameByHash.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/WeaponDisplayNameByHash.js"() {
       init_DlcWeaponData();
       init_hashes();
       WeaponDisplayNameByHash = /* @__PURE__ */ new Map([
@@ -7929,7 +7962,7 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/WeaponHudStats.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/WeaponHudStats.js
   function initializeOnce8() {
     let isInitialized = false;
     return function() {
@@ -7954,7 +7987,7 @@
   }
   var WeaponHudStats;
   var init_WeaponHudStats = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/WeaponHudStats.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/WeaponHudStats.js"() {
       init_utils();
       init_hashes();
       init_utils();
@@ -7963,10 +7996,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/Mk2WeaponHash.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/Mk2WeaponHash.js
   var Mk2WeaponHash;
   var init_Mk2WeaponHash = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/Mk2WeaponHash.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/Mk2WeaponHash.js"() {
       (function(Mk2WeaponHash2) {
         Mk2WeaponHash2[Mk2WeaponHash2["PistolMk2"] = 3219281620] = "PistolMk2";
         Mk2WeaponHash2[Mk2WeaponHash2["SNSPistolMk2"] = 2285322324] = "SNSPistolMk2";
@@ -7984,10 +8017,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/Weapon.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/Weapon.js
   var Weapon;
   var init_Weapon = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/Weapon.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/Weapon.js"() {
       init_WeaponComponentCollection();
       init_hashes();
       init_WeaponDisplayNameByHash();
@@ -8127,10 +8160,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/WeaponCollection.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/WeaponCollection.js
   var WeaponCollection;
   var init_WeaponCollection = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/WeaponCollection.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/WeaponCollection.js"() {
       init_Weapon();
       init_models();
       WeaponCollection = class {
@@ -8243,16 +8276,16 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/Ped.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/Ped.js
   var Ped;
   var init_Ped = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/Ped.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/Ped.js"() {
       init_lib();
       init_enums();
       init_Tasks();
       init_models();
       init_WeaponCollection();
-      Ped = class extends Entity {
+      Ped = class extends Entity2 {
         constructor(handle) {
           super(handle);
           this.speechModifierNames = [
@@ -8299,7 +8332,7 @@
           return typeof ped !== "undefined" && ped.exists();
         }
         get Player() {
-          return new Player(NetworkGetPlayerIndexFromPed(this.handle));
+          return new Player2(NetworkGetPlayerIndexFromPed(this.handle));
         }
         get Money() {
           return GetPedMoney(this.handle);
@@ -8635,7 +8668,7 @@
           return new Ped(GetMeleeTargetForPed(this.handle));
         }
         getKiller() {
-          return Entity.fromHandle(GetPedSourceOfDeath(this.handle));
+          return Entity2.fromHandle(GetPedSourceOfDeath(this.handle));
         }
         kill() {
           this.Health = -1;
@@ -8675,8 +8708,8 @@
             throw new RangeError("modifier");
           }
         }
-        applyDamage(damageAmount) {
-          ApplyDamageToPed(this.handle, damageAmount, true);
+        applyDamage(damageAmount, armorFirst = true) {
+          ApplyDamageToPed(this.handle, damageAmount, armorFirst);
         }
         hasBeenDamagedByWeapon(weapon) {
           return HasPedBeenDamagedByWeapon(this.handle, Number(weapon), 0);
@@ -8899,10 +8932,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/PedBone.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/PedBone.js
   var PedBone;
   var init_PedBone = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/PedBone.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/PedBone.js"() {
       init_models();
       PedBone = class extends EntityBone {
         constructor(owner, boneId) {
@@ -8915,10 +8948,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/PedBoneCollection.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/PedBoneCollection.js
   var PedBoneCollection;
   var init_PedBoneCollection = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/PedBoneCollection.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/PedBoneCollection.js"() {
       init_models();
       PedBoneCollection = class extends EntityBoneCollection {
         constructor(owner) {
@@ -8941,25 +8974,27 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/Player.js
-  var Player;
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/Player.js
+  var Player2;
   var init_Player = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/Player.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/Player.js"() {
       init_lib();
+      init_cfx();
       init_models();
-      Player = class {
+      Player2 = class {
         constructor(handle) {
           this.pvp = false;
+          this.stateBagCookies = [];
           this.handle = handle;
           if (!IsDuplicityVersion()) {
             this.PvPEnabled = true;
           }
         }
         static fromPedHandle(handle) {
-          return new Player(NetworkGetPlayerIndexFromPed(handle));
+          return new Player2(NetworkGetPlayerIndexFromPed(handle));
         }
         static fromServerId(serverId) {
-          return new Player(GetPlayerFromServerId(serverId));
+          return new Player2(GetPlayerFromServerId(serverId));
         }
         get Handle() {
           return this.handle;
@@ -8976,6 +9011,30 @@
         }
         get ServerId() {
           return GetPlayerServerId(this.handle);
+        }
+        get State() {
+          return cfx_default.Player(this.ServerId).state;
+        }
+        AddStateBagChangeHandler(keyFilter, handler) {
+          const cookie = AddStateBagChangeHandler(keyFilter, `player:${this.ServerId}`, handler);
+          this.stateBagCookies.push(cookie);
+          return cookie;
+        }
+        listenForStateChange(keyFilter, handler) {
+          return this.AddStateBagChangeHandler(keyFilter, handler);
+        }
+        removeStateListener(tgtCookie) {
+          this.stateBagCookies = this.stateBagCookies.filter((cookie) => {
+            const isCookie = cookie == tgtCookie;
+            if (isCookie)
+              RemoveStateBagChangeHandler(cookie);
+            return isCookie;
+          });
+        }
+        removeAllStateListeners() {
+          for (const cookie of this.stateBagCookies) {
+            RemoveStateBagChangeHandler(cookie);
+          }
         }
         get Name() {
           return GetPlayerName(this.handle);
@@ -8994,7 +9053,7 @@
         get EntityPlayerIsAimingAt() {
           const [entityHit, entity] = GetEntityPlayerIsFreeAimingAt(this.handle);
           if (entityHit) {
-            return Entity.fromHandle(entity);
+            return Entity2.fromHandle(entity);
           }
           return null;
         }
@@ -9053,7 +9112,7 @@
         get TargetEntity() {
           const [entityHit, entity] = GetPlayerTargetEntity(this.handle);
           if (entityHit) {
-            return Entity.fromHandle(entity);
+            return Entity2.fromHandle(entity);
           }
           return null;
         }
@@ -9067,12 +9126,12 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/Prop.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/Prop.js
   var Prop;
   var init_Prop = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/Prop.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/Prop.js"() {
       init_models();
-      Prop = class extends Entity {
+      Prop = class extends Entity2 {
         static exists(prop) {
           return typeof prop !== "undefined" && prop.exists();
         }
@@ -9089,14 +9148,14 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/Vehicle.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/Vehicle.js
   var Vehicle;
   var init_Vehicle2 = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/Vehicle.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/Vehicle.js"() {
       init_models();
       init_enums();
       init_Game();
-      Vehicle = class extends Entity {
+      Vehicle = class extends Entity2 {
         constructor(handle) {
           super(handle);
         }
@@ -9610,10 +9669,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/VehicleDoor.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/VehicleDoor.js
   var VehicleDoor;
   var init_VehicleDoor = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/VehicleDoor.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/VehicleDoor.js"() {
       VehicleDoor = class {
         constructor(owner, index) {
           this._owner = owner;
@@ -9659,10 +9718,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/VehicleDoorCollection.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/VehicleDoorCollection.js
   var VehicleDoorCollection;
   var init_VehicleDoorCollection = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/VehicleDoorCollection.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/VehicleDoorCollection.js"() {
       init_enums();
       init_VehicleDoor();
       VehicleDoorCollection = class {
@@ -9724,10 +9783,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/VehicleMod.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/VehicleMod.js
   var VehicleMod;
   var init_VehicleMod = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/VehicleMod.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/VehicleMod.js"() {
       VehicleMod = class {
         constructor(owner, modType) {
           this._owner = owner;
@@ -9764,10 +9823,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/VehicleToggleMod.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/VehicleToggleMod.js
   var VehicleToggleMod;
   var init_VehicleToggleMod = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/VehicleToggleMod.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/VehicleToggleMod.js"() {
       VehicleToggleMod = class {
         constructor(owner, modType) {
           this._owner = owner;
@@ -9798,10 +9857,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/VehicleModCollection.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/VehicleModCollection.js
   var VehicleModCollection;
   var init_VehicleModCollection = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/VehicleModCollection.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/VehicleModCollection.js"() {
       init_enums();
       init_VehicleMod();
       init_utils();
@@ -10024,10 +10083,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/VehicleWheel.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/VehicleWheel.js
   var VehicleWheel;
   var init_VehicleWheel = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/VehicleWheel.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/VehicleWheel.js"() {
       VehicleWheel = class {
         constructor(owner, index) {
           this._owner = owner;
@@ -10052,10 +10111,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/VehicleWheelCollection.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/VehicleWheelCollection.js
   var VehicleWheelCollection;
   var init_VehicleWheelCollection = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/VehicleWheelCollection.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/VehicleWheelCollection.js"() {
       init_VehicleWheel();
       init_enums();
       VehicleWheelCollection = class {
@@ -10112,10 +10171,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/VehicleWindow.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/VehicleWindow.js
   var VehicleWindow;
   var init_VehicleWindow = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/VehicleWindow.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/VehicleWindow.js"() {
       VehicleWindow = class {
         constructor(owner, index) {
           this._owner = owner;
@@ -10152,10 +10211,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/VehicleWindowCollection.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/VehicleWindowCollection.js
   var VehicleWindowCollection;
   var init_VehicleWindowCollection = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/VehicleWindowCollection.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/VehicleWindowCollection.js"() {
       init_enums();
       init_VehicleWindow();
       VehicleWindowCollection = class {
@@ -10211,9 +10270,9 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/index.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/index.js
   var init_models = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/models/index.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/models/index.js"() {
       init_Entity();
       init_EntityBone();
       init_EntityBoneCollection();
@@ -10235,10 +10294,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/Game.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/Game.js
   var Game;
   var init_Game = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/Game.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/Game.js"() {
       init_Audio();
       init_enums();
       init_models();
@@ -10275,7 +10334,7 @@
         static get Player() {
           const handle = PlayerId();
           if (typeof this.cachedPlayer === "undefined" || handle !== this.cachedPlayer.Handle) {
-            this.cachedPlayer = new Player(handle);
+            this.cachedPlayer = new Player2(handle);
           }
           return this.cachedPlayer;
         }
@@ -10288,7 +10347,7 @@
             if (excludeLocalPlayer && localPlayer.Handle === id) {
               continue;
             }
-            yield new Player(id);
+            yield new Player2(id);
           }
         }
         static get PlayerVersusPlayer() {
@@ -10443,10 +10502,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/Camera.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/Camera.js
   var Camera;
   var init_Camera = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/Camera.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/Camera.js"() {
       init_models();
       init_utils();
       Camera = class {
@@ -10547,7 +10606,7 @@
           SetCamShakeAmplitude(this.handle, amplitude);
         }
         pointAt(target, offset = new Vector3(0, 0, 0)) {
-          if (target instanceof Entity) {
+          if (target instanceof Entity2) {
             PointCamAtEntity(this.handle, target.Handle, offset.x, offset.y, offset.z, true);
           } else if (target instanceof PedBone) {
             PointCamAtPedBone(this.handle, target.Owner.Handle, target.Index, offset.x, offset.y, offset.z, true);
@@ -10565,7 +10624,7 @@
           return IsCamInterpolating(this.handle);
         }
         attachTo(object, offset) {
-          if (object instanceof Entity) {
+          if (object instanceof Entity2) {
             AttachCamToEntity(this.handle, object.Handle, offset.x, offset.y, offset.z, true);
           } else if (object instanceof PedBone) {
             AttachCamToPedBone(this.handle, object.Owner.Handle, object.Index, offset.x, offset.y, offset.z, true);
@@ -10584,10 +10643,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/Pickup.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/Pickup.js
   var Pickup;
   var init_Pickup = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/Pickup.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/Pickup.js"() {
       init_utils();
       Pickup = class {
         constructor(handle) {
@@ -10610,10 +10669,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/Raycast.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/Raycast.js
   var RaycastResult;
   var init_Raycast = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/Raycast.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/Raycast.js"() {
       init_Game();
       init_utils();
       RaycastResult = class {
@@ -10658,10 +10717,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/World.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/World.js
   var __awaiter2, World;
   var init_World = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/World.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/World.js"() {
       init_lib();
       init_Blip2();
       init_Camera();
@@ -11072,18 +11131,18 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/Checkpoint.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/Checkpoint.js
   var init_Checkpoint2 = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/Checkpoint.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/Checkpoint.js"() {
       init_enums();
       init_utils();
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/GameplayCamera.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/GameplayCamera.js
   var GameplayCamera;
   var init_GameplayCamera = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/GameplayCamera.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/GameplayCamera.js"() {
       init_utils();
       GameplayCamera = class {
         static get Position() {
@@ -11115,45 +11174,45 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ParticleEffect.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ParticleEffect.js
   var init_ParticleEffect = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ParticleEffect.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ParticleEffect.js"() {
       init_enums();
       init_utils();
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ParticleEffectAsset.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ParticleEffectAsset.js
   var init_ParticleEffectAsset = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ParticleEffectAsset.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ParticleEffectAsset.js"() {
       init_enums();
       init_utils();
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/RelationshipGroup.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/RelationshipGroup.js
   var init_RelationshipGroup = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/RelationshipGroup.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/RelationshipGroup.js"() {
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/TaskSequence.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/TaskSequence.js
   var init_TaskSequence = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/TaskSequence.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/TaskSequence.js"() {
       init_Ped();
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/interfaces/index.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/interfaces/index.js
   var init_interfaces = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/interfaces/index.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/interfaces/index.js"() {
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Rectangle.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Rectangle.js
   var Rectangle;
   var init_Rectangle = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Rectangle.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Rectangle.js"() {
       init_utils();
       init_ui();
       Rectangle = class {
@@ -11191,10 +11250,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Container.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Container.js
   var Container;
   var init_Container = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Container.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Container.js"() {
       init_utils();
       init_ui();
       Container = class {
@@ -11226,10 +11285,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Effects.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Effects.js
   var Effects;
   var init_Effects = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Effects.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Effects.js"() {
       Effects = class {
         static start(effectName, duration = 0, looped = false) {
           StartScreenEffect(this.effectToString(effectName), duration, looped);
@@ -11338,16 +11397,16 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Fading.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Fading.js
   var init_Fading = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Fading.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Fading.js"() {
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Hud.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Hud.js
   var Hud;
   var init_Hud = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Hud.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Hud.js"() {
       init_enums();
       Hud = class {
         static isComponentActive(component) {
@@ -11390,10 +11449,23 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/LoadingPrompt.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Scaleform.js
+  var init_Scaleform = __esm({
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Scaleform.js"() {
+    }
+  });
+
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/InstructionalButtons.js
+  var init_InstructionalButtons = __esm({
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/InstructionalButtons.js"() {
+      init_Scaleform();
+    }
+  });
+
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/LoadingPrompt.js
   var LoadingPrompt;
   var init_LoadingPrompt = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/LoadingPrompt.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/LoadingPrompt.js"() {
       init_enums();
       LoadingPrompt = class {
         static show(loadingText = "", spinnerType = LoadingSpinnerType.RegularClockwise) {
@@ -11420,10 +11492,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Notification.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Notification.js
   var Notification;
   var init_Notification = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Notification.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Notification.js"() {
       Notification = class {
         constructor(handle) {
           this.handle = handle;
@@ -11435,16 +11507,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Scaleform.js
-  var init_Scaleform = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Scaleform.js"() {
-    }
-  });
-
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Screen.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Screen.js
   var Screen;
   var init_Screen = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Screen.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Screen.js"() {
       init_Audio();
       init_enums();
       init_utils();
@@ -11520,10 +11586,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Sprite.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Sprite.js
   var Sprite;
   var init_Sprite = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Sprite.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Sprite.js"() {
       init_utils();
       init_ui();
       Sprite = class {
@@ -11580,10 +11646,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Text.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Text.js
   var Text;
   var init_Text = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Text.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Text.js"() {
       init_enums();
       init_utils();
       init_ui();
@@ -11674,10 +11740,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Timerbar.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Timerbar.js
   var activeTimerBars, drawText;
   var init_Timerbar = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/Timerbar.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/Timerbar.js"() {
       init_enums();
       init_utils();
       init_Hud();
@@ -11772,18 +11838,18 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/AbstractUIMenuPanel.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/AbstractUIMenuPanel.js
   var init_AbstractUIMenuPanel = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/AbstractUIMenuPanel.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/AbstractUIMenuPanel.js"() {
       init_utils();
       init_ui();
       init_menu();
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/UIMenuGridPanel.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/UIMenuGridPanel.js
   var init_UIMenuGridPanel = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/UIMenuGridPanel.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/UIMenuGridPanel.js"() {
       init_utils();
       init_panels();
       init_ui();
@@ -11792,9 +11858,9 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/UIMenuColorPanel.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/UIMenuColorPanel.js
   var init_UIMenuColorPanel = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/UIMenuColorPanel.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/UIMenuColorPanel.js"() {
       init_utils();
       init_panels();
       init_ui();
@@ -11803,9 +11869,9 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/UIMenuPercentagePanel.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/UIMenuPercentagePanel.js
   var init_UIMenuPercentagePanel = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/UIMenuPercentagePanel.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/UIMenuPercentagePanel.js"() {
       init_utils();
       init_panels();
       init_ui();
@@ -11814,27 +11880,27 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/UIMenuStatisticsPanel.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/UIMenuStatisticsPanel.js
   var init_UIMenuStatisticsPanel = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/UIMenuStatisticsPanel.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/UIMenuStatisticsPanel.js"() {
       init_utils();
       init_panels();
       init_ui();
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/UIMenuStatisticsPanelItem.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/UIMenuStatisticsPanelItem.js
   var init_UIMenuStatisticsPanelItem = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/UIMenuStatisticsPanelItem.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/UIMenuStatisticsPanelItem.js"() {
       init_utils();
       init_ui();
       init_enums();
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/index.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/index.js
   var init_panels = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/index.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/panels/index.js"() {
       init_AbstractUIMenuPanel();
       init_UIMenuGridPanel();
       init_UIMenuColorPanel();
@@ -11844,10 +11910,10 @@
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/UIMenuItem.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/UIMenuItem.js
   var UIMenuItem;
   var init_UIMenuItem = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/UIMenuItem.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/UIMenuItem.js"() {
       init_menu();
       init_ui();
       init_enums();
@@ -12923,10 +12989,10 @@ ${word} `;
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/UIMenuCheckboxItem.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/UIMenuCheckboxItem.js
   var UIMenuCheckboxItem;
   var init_UIMenuCheckboxItem = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/UIMenuCheckboxItem.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/UIMenuCheckboxItem.js"() {
       init_ui();
       init_utils();
       init_items();
@@ -12987,10 +13053,10 @@ ${word} `;
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/UIMenuListItem.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/UIMenuListItem.js
   var UIMenuListItem;
   var init_UIMenuListItem = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/UIMenuListItem.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/UIMenuListItem.js"() {
       init_ui();
       init_enums();
       init_utils();
@@ -13094,10 +13160,10 @@ ${word} `;
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/UIMenuSeparatorItem.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/UIMenuSeparatorItem.js
   var UIMenuSeparatorItem;
   var init_UIMenuSeparatorItem = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/UIMenuSeparatorItem.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/UIMenuSeparatorItem.js"() {
       init_items();
       init_enums();
       init_menu();
@@ -13130,10 +13196,10 @@ ${word} `;
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/UIMenuSliderItem.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/UIMenuSliderItem.js
   var UIMenuSliderItem;
   var init_UIMenuSliderItem = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/UIMenuSliderItem.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/UIMenuSliderItem.js"() {
       init_ui();
       init_items();
       init_utils();
@@ -13297,9 +13363,9 @@ ${word} `;
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/index.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/index.js
   var init_items = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/items/index.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/items/index.js"() {
       init_panels();
       init_UIMenuItem();
       init_UIMenuCheckboxItem();
@@ -13309,24 +13375,24 @@ ${word} `;
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/modules/ListItem.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/modules/ListItem.js
   var init_ListItem = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/modules/ListItem.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/modules/ListItem.js"() {
       init_utils();
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/modules/index.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/modules/index.js
   var init_modules = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/modules/index.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/modules/index.js"() {
       init_ListItem();
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/Menu.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/Menu.js
   var __awaiter3, Menu;
   var init_Menu = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/Menu.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/Menu.js"() {
       init_ui();
       init_lib();
       init_enums();
@@ -14095,10 +14161,10 @@ ${word} `;
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/MenuControl.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/MenuControl.js
   var MenuControl;
   var init_MenuControl = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/MenuControl.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/MenuControl.js"() {
       MenuControl = class {
         constructor(enabled = true) {
           this._enabled = enabled;
@@ -14113,10 +14179,10 @@ ${word} `;
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/MenuControls.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/MenuControls.js
   var MenuControls;
   var init_MenuControls = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/MenuControls.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/MenuControls.js"() {
       init_MenuControl();
       MenuControls = class {
         constructor() {
@@ -14131,10 +14197,10 @@ ${word} `;
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/MenuSettings.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/MenuSettings.js
   var MenuSettings;
   var init_MenuSettings = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/MenuSettings.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/MenuSettings.js"() {
       init_lib();
       init_enums();
       MenuSettings = class {
@@ -14189,9 +14255,9 @@ ${word} `;
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/index.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/index.js
   var init_menu = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/menu/index.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/menu/index.js"() {
       init_items();
       init_modules();
       init_Menu();
@@ -14201,15 +14267,16 @@ ${word} `;
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/index.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/index.js
   var init_ui = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/ui/index.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/ui/index.js"() {
       init_interfaces();
       init_Rectangle();
       init_Container();
       init_Effects();
       init_Fading();
       init_Hud();
+      init_InstructionalButtons();
       init_LoadingPrompt();
       init_Notification();
       init_Scaleform();
@@ -14221,10 +14288,10 @@ ${word} `;
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/WeaponTint.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/WeaponTint.js
   var WeaponTint;
   var init_WeaponTint = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/WeaponTint.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/WeaponTint.js"() {
       (function(WeaponTint2) {
         WeaponTint2[WeaponTint2["Mk2ClassicBlack"] = 0] = "Mk2ClassicBlack";
         WeaponTint2[WeaponTint2["Mk2ClassicGray"] = 1] = "Mk2ClassicGray";
@@ -14270,10 +14337,10 @@ ${word} `;
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/WeaponGroup.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/WeaponGroup.js
   var WeaponGroup;
   var init_WeaponGroup = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/WeaponGroup.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/WeaponGroup.js"() {
       (function(WeaponGroup2) {
         WeaponGroup2[WeaponGroup2["Unarmed"] = 2685387236] = "Unarmed";
         WeaponGroup2[WeaponGroup2["Melee"] = 3566412244] = "Melee";
@@ -14295,10 +14362,10 @@ ${word} `;
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/WeaponLivery.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/WeaponLivery.js
   var WeaponLivery;
   var init_WeaponLivery = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/WeaponLivery.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/WeaponLivery.js"() {
       (function(WeaponLivery2) {
         WeaponLivery2[WeaponLivery2["Digital"] = 0] = "Digital";
         WeaponLivery2[WeaponLivery2["Brushstroke"] = 1] = "Brushstroke";
@@ -14315,10 +14382,10 @@ ${word} `;
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/WeaponLiveryColor.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/WeaponLiveryColor.js
   var WeaponLiveryColor;
   var init_WeaponLiveryColor = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/WeaponLiveryColor.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/WeaponLiveryColor.js"() {
       (function(WeaponLiveryColor2) {
         WeaponLiveryColor2[WeaponLiveryColor2["Gray"] = 0] = "Gray";
         WeaponLiveryColor2[WeaponLiveryColor2["DarkGray"] = 1] = "DarkGray";
@@ -14356,18 +14423,18 @@ ${word} `;
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/WeaponAsset.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/WeaponAsset.js
   var init_WeaponAsset = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/WeaponAsset.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/WeaponAsset.js"() {
       init_Weapon();
       init_Game();
       init_utils();
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/index.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/index.js
   var init_weapon = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weapon/index.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weapon/index.js"() {
       init_DlcWeaponData();
       init_WeaponHudStats();
       init_WeaponTint();
@@ -14379,9 +14446,9 @@ ${word} `;
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/index.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/index.js
   var init_weaponComponent = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/weaponComponent/index.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/weaponComponent/index.js"() {
       init_DlcWeaponComponentData();
       init_WeaponComponentHudStats();
       init_ComponentAttachmentPoint();
@@ -14390,9 +14457,10 @@ ${word} `;
     }
   });
 
-  // node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/index.js
+  // node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/index.js
   var init_lib = __esm({
-    "node_modules/.pnpm/@nativewrappers+client@1.6.1/node_modules/@nativewrappers/client/lib/index.js"() {
+    "node_modules/.pnpm/@nativewrappers+client@1.7.1/node_modules/@nativewrappers/client/lib/index.js"() {
+      init_utils();
       init_Game();
       init_World();
       init_Model();
@@ -14409,7 +14477,6 @@ ${word} `;
       init_Tasks();
       init_TaskSequence();
       init_models();
-      init_utils();
       init_enums();
       init_hashes();
       init_ui();
@@ -14419,39 +14486,12 @@ ${word} `;
   });
 
   // shared/utils.ts
-  var WEAPON_LIST;
+  var DISABLED_WEAPONS, WEAPON_LIST;
   var init_utils2 = __esm({
     "shared/utils.ts"() {
       init_lib();
+      DISABLED_WEAPONS = JSON.parse(LoadResourceFile(GetCurrentResourceName(), "disabledweapons.json"));
       WEAPON_LIST = /* @__PURE__ */ new Map();
-      WEAPON_LIST.set(GetHashKey("WEAPON_BOTTLE"), {
-        model: new Model("prop_w_me_bottle"),
-        bone: 24818,
-        offset: new Vector3(0.1, -0.15, 0),
-        rotation: new Vector3(0, 0, 0),
-        category: 0 /* Melee */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_KNUCKLE"), {
-        model: new Model("prop_w_me_dagger"),
-        bone: 24818,
-        offset: new Vector3(0.1, -0.15, 0),
-        rotation: new Vector3(0, 0, 0),
-        category: 0 /* Melee */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_SWITCHBLADE"), {
-        model: new Model("prop_w_me_dagger"),
-        bone: 24818,
-        offset: new Vector3(0.1, -0.15, 0),
-        rotation: new Vector3(0, 0, 0),
-        category: 0 /* Melee */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_FLAREGUN"), {
-        model: new Model("w_pi_flaregun"),
-        bone: 58271,
-        offset: new Vector3(-0.01, 0.1, -0.07),
-        rotation: new Vector3(-55, 0.1, 0),
-        category: 1 /* HandGuns */
-      });
       WEAPON_LIST.set(GetHashKey("WEAPON_MINIGUN"), {
         model: new Model("w_mg_minigun"),
         bone: 24818,
@@ -14473,110 +14513,12 @@ ${word} `;
         rotation: new Vector3(0, 0, 0),
         category: 8 /* Heavy */
       });
-      WEAPON_LIST.set(GetHashKey("WEAPON_STICKYBOMB"), {
-        model: new Model("prop_bomb_01_s"),
-        bone: 24818,
-        offset: new Vector3(0.1, -0.15, 0),
-        rotation: new Vector3(0, 0, 0),
-        category: 9 /* Throw */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_MOLOTOV"), {
-        model: new Model("w_ex_molotov"),
-        bone: 24818,
-        offset: new Vector3(0.1, -0.15, 0),
-        rotation: new Vector3(0, 0, 0),
-        category: 9 /* Throw */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_FIREEXTINGUISHER"), {
-        model: new Model("w_am_fire_exting"),
-        bone: 24818,
-        offset: new Vector3(0.1, -0.15, 0),
-        rotation: new Vector3(0, 0, 0),
-        category: 9 /* Throw */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_PETROLCAN"), {
-        model: new Model("w_am_jerrycan"),
-        bone: 24818,
-        offset: new Vector3(0.1, -0.15, 0),
-        rotation: new Vector3(0, 0, 0),
-        category: 9 /* Throw */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_SNOWBALL"), {
-        model: new Model("w_ex_snowball"),
-        bone: 24818,
-        offset: new Vector3(0.1, -0.15, 0),
-        rotation: new Vector3(0, 0, 0),
-        category: 9 /* Throw */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_BALL"), {
-        model: new Model("w_am_baseball"),
-        bone: 24818,
-        offset: new Vector3(0.1, -0.15, 0),
-        rotation: new Vector3(0, 0, 0),
-        category: 9 /* Throw */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_GRENADE"), {
-        model: new Model("w_ex_grenadefrag"),
-        bone: 24818,
-        offset: new Vector3(0.1, -0.15, 0),
-        rotation: new Vector3(0, 0, 0),
-        category: 9 /* Throw */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_SMOKEGRENADE"), {
-        model: new Model("w_ex_grenadesmoke"),
-        bone: 24818,
-        offset: new Vector3(0.1, -0.15, 0),
-        rotation: new Vector3(0, 0, 0),
-        category: 9 /* Throw */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_BZGAS"), {
-        model: new Model("w_ex_grenadesmoke"),
-        bone: 24818,
-        offset: new Vector3(0.1, -0.15, 0),
-        rotation: new Vector3(0, 0, 0),
-        category: 9 /* Throw */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_DIGISCANNER"), {
-        model: new Model("w_am_digiscanner"),
-        bone: 24818,
-        offset: new Vector3(0.1, -0.15, 0),
-        rotation: new Vector3(0, 0, 0),
-        category: 10 /* Other */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_DAGGER"), {
-        model: new Model("prop_w_me_dagger"),
-        bone: 51826,
-        offset: new Vector3(0.1, -0.15, 0),
-        rotation: new Vector3(0, 0, 0),
-        category: 10 /* Other */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_WRENCH"), {
-        model: new Model("w_me_hammer"),
-        bone: 24818,
-        offset: new Vector3(0.1, -0.15, 0),
-        rotation: new Vector3(0, 0, 0),
-        category: 10 /* Other */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_VINTAGEPISTOL"), {
-        model: new Model("w_pi_vintage_pistol"),
-        bone: 51826,
-        offset: new Vector3(-0.01, 0.1, 0.07),
-        rotation: new Vector3(-115, 0, 0),
-        category: 1 /* HandGuns */
-      });
       WEAPON_LIST.set(GetHashKey("WEAPON_BULLPUPRIFLE"), {
         model: new Model("w_ar_bullpuprifle"),
         bone: 24818,
         offset: new Vector3(0.05, -0.17, -0.02),
         rotation: new Vector3(0, 155, 0),
         category: 3 /* Assault */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_CROWBAR"), {
-        model: new Model("w_me_crowbar"),
-        bone: 24818,
-        offset: new Vector3(-0.1, -0.15, -0),
-        rotation: new Vector3(180, 90, 0),
-        category: 0 /* Melee */
       });
       WEAPON_LIST.set(GetHashKey("WEAPON_SNIPERRIFLE"), {
         model: new Model("w_sr_sniperrifle"),
@@ -14585,61 +14527,12 @@ ${word} `;
         rotation: new Vector3(0, 0, 0),
         category: 5 /* Sniper */
       });
-      WEAPON_LIST.set(GetHashKey("WEAPON_HEAVYPISTOL"), {
-        model: new Model("w_pi_heavypistol"),
-        bone: 51826,
-        offset: new Vector3(-0.01, 0.1, 0.07),
-        rotation: new Vector3(-115, 0, 0),
-        category: 1 /* HandGuns */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_POOLCUE"), {
-        model: new Model("w_me_poolcue"),
-        bone: 24818,
-        offset: new Vector3(-0.25, -0.17, -0),
-        rotation: new Vector3(180, 90, 0),
-        category: 0 /* Melee */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_PISTOL"), {
-        model: new Model("w_pi_pistol"),
-        bone: 51826,
-        offset: new Vector3(-0.01, 0.1, 0.07),
-        rotation: new Vector3(-115, 0, 0),
-        category: 1 /* HandGuns */
-      });
       WEAPON_LIST.set(GetHashKey("WEAPON_SMG"), {
         model: new Model("w_sb_smg"),
         bone: 24818,
         offset: new Vector3(0, -0.15, 0),
         rotation: new Vector3(0, 155, 0),
         category: 2 /* SMG */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_GOLFCLUB"), {
-        model: new Model("w_me_gclub"),
-        bone: 24818,
-        offset: new Vector3(-0.1, -0.15, -0),
-        rotation: new Vector3(180, 90, 0),
-        category: 0 /* Melee */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_MACHETE"), {
-        model: new Model("prop_ld_w_me_machette"),
-        bone: 24818,
-        offset: new Vector3(-0.1, -0.15, -0),
-        rotation: new Vector3(180, 90, 0),
-        category: 0 /* Melee */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_FLASHLIGHT"), {
-        model: new Model("prop_w_me_dagger"),
-        bone: 58271,
-        offset: new Vector3(0, 0, 0),
-        rotation: new Vector3(0, 0, 0),
-        category: 0 /* Melee */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_HAMMER"), {
-        model: new Model("prop_tool_hammer"),
-        bone: 51826,
-        offset: new Vector3(0.1, -0.15, 0),
-        rotation: new Vector3(0, 0, 0),
-        category: 0 /* Melee */
       });
       WEAPON_LIST.set(GetHashKey("WEAPON_HUNTINGRIFLE"), {
         model: new Model("w_sr_huntingrifle"),
@@ -14655,32 +14548,11 @@ ${word} `;
         rotation: new Vector3(0, 0, 0),
         category: 8 /* Heavy */
       });
-      WEAPON_LIST.set(GetHashKey("WEAPON_APPISTOL"), {
-        model: new Model("w_pi_appistol"),
-        bone: 51826,
-        offset: new Vector3(-0.01, 0.1, 0.07),
-        rotation: new Vector3(-115, 0, 0),
-        category: 1 /* HandGuns */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_BATTLEAXE"), {
-        model: new Model("w_me_battleaxe"),
-        bone: 24818,
-        offset: new Vector3(-0.1, -0.15, -0),
-        rotation: new Vector3(180, 90, 0),
-        category: 0 /* Melee */
-      });
       WEAPON_LIST.set(GetHashKey("WEAPON_STUNGUN"), {
         model: new Model("w_pi_stungun"),
-        bone: 58271,
-        offset: new Vector3(-0.01, 0.1, -0.07),
-        rotation: new Vector3(-55, 0.1, 0),
-        category: 1 /* HandGuns */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_PISTOL50"), {
-        model: new Model("w_pi_pistol50"),
         bone: 51826,
-        offset: new Vector3(-0.01, 0.1, 0.07),
-        rotation: new Vector3(-115, 0, 0),
+        offset: new Vector3(-0.055, 0.1, 0.05),
+        rotation: new Vector3(-135, 0.15, 0),
         category: 1 /* HandGuns */
       });
       WEAPON_LIST.set(GetHashKey("WEAPON_COMBATMG"), {
@@ -14695,20 +14567,6 @@ ${word} `;
         bone: 24818,
         offset: new Vector3(0.1, -0.15, 0),
         rotation: new Vector3(0, 0, 0),
-        category: 2 /* SMG */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_KNIFE"), {
-        model: new Model("prop_w_me_knife_01"),
-        bone: 24818,
-        offset: new Vector3(0.1, -0.15, 0),
-        rotation: new Vector3(0, 0, 0),
-        category: 0 /* Melee */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_MICROSMG"), {
-        model: new Model("w_sb_microsmg"),
-        bone: 51826,
-        offset: new Vector3(0, 9e-3, 0.15),
-        rotation: new Vector3(270, -10, 0),
         category: 2 /* SMG */
       });
       WEAPON_LIST.set(GetHashKey("WEAPON_MARKSMANRIFLE"), {
@@ -14802,13 +14660,6 @@ ${word} `;
         rotation: new Vector3(0, 155, 0),
         category: 3 /* Assault */
       });
-      WEAPON_LIST.set(GetHashKey("WEAPON_HATCHET"), {
-        model: new Model("w_me_hatchet"),
-        bone: 24818,
-        offset: new Vector3(0.1, -0.15, 0),
-        rotation: new Vector3(0, 0, 0),
-        category: 0 /* Melee */
-      });
       WEAPON_LIST.set(GetHashKey("WEAPON_PUMPSHOTGUN_MK2"), {
         model: new Model("w_sg_pumpshotgunmk2"),
         bone: 24818,
@@ -14837,13 +14688,6 @@ ${word} `;
         rotation: new Vector3(0, 225, 0),
         category: 4 /* Shotgun */
       });
-      WEAPON_LIST.set(GetHashKey("WEAPON_NIGHTSTICK"), {
-        model: new Model("w_me_nightstick"),
-        bone: 51826,
-        offset: new Vector3(-0.15, 0.07, 0.125),
-        rotation: new Vector3(270, 90, 0),
-        category: 0 /* Melee */
-      });
       WEAPON_LIST.set(GetHashKey("WEAPON_GUSENBERG"), {
         model: new Model("w_sb_gusenberg"),
         bone: 24818,
@@ -14851,26 +14695,170 @@ ${word} `;
         rotation: new Vector3(0, 0, 0),
         category: 2 /* SMG */
       });
-      WEAPON_LIST.set(GetHashKey("WEAPON_COMBATPISTOL"), {
-        model: new Model("w_pi_combatpistol"),
-        bone: 51826,
-        offset: new Vector3(-0.01, 0.1, 0.07),
-        rotation: new Vector3(-115, 0, 0),
-        category: 1 /* HandGuns */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_SNSPISTOL"), {
-        model: new Model("w_pi_sns_pistol"),
-        bone: 58271,
-        offset: new Vector3(-0.01, 0.1, -0.07),
-        rotation: new Vector3(-55, 0.1, 0),
-        category: 1 /* HandGuns */
-      });
-      WEAPON_LIST.set(GetHashKey("WEAPON_BAT"), {
-        model: new Model("w_me_bat"),
+      WEAPON_LIST.set(GetHashKey("W_AR_ASSAULTRIFLEMK2"), {
+        model: new Model("weapon_assaultrifle_mk2"),
         bone: 24818,
-        offset: new Vector3(-0.25, -0.17, -0),
-        rotation: new Vector3(90, 90, 0),
-        category: 0 /* Melee */
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      WEAPON_LIST.set(GetHashKey("W_AR_BULLPUPRIFLEMK2"), {
+        model: new Model("weapon_bullpuprifle_mk2"),
+        bone: 24818,
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      WEAPON_LIST.set(GetHashKey("WEAPON_CARBINERIFLE_MK2"), {
+        model: new Model("W_AR_CARBINERIFLEMK2"),
+        bone: 24818,
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      WEAPON_LIST.set(GetHashKey("WEAPON_AK74U"), {
+        model: new Model("w_ar_ak74u"),
+        bone: 24818,
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      WEAPON_LIST.set(GetHashKey("WEAPON_AKMS"), {
+        model: new Model("w_ar_akms"),
+        bone: 24818,
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      WEAPON_LIST.set(GetHashKey("weapon_compactrifle"), {
+        model: new Model("w_ar_assaultrifle_smg"),
+        bone: 24818,
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      WEAPON_LIST.set(GetHashKey("WEAPON_COMPACTRIFLE_MK2"), {
+        model: new Model("w_ar_compactrifle_mk2"),
+        bone: 24818,
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      WEAPON_LIST.set(GetHashKey("weapon_mossberg590"), {
+        model: new Model("w_sg_mossberg590"),
+        bone: 24818,
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      WEAPON_LIST.set(GetHashKey("weapon_p90"), {
+        model: new Model("w_sb_p90"),
+        bone: 24818,
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      WEAPON_LIST.set(GetHashKey("weapon_remington870"), {
+        model: new Model("w_sg_remington870"),
+        bone: 24818,
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      WEAPON_LIST.set(GetHashKey("weapon_spas12"), {
+        model: new Model("w_sg_spas12"),
+        bone: 24818,
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      WEAPON_LIST.set(GetHashKey("weapon_ump45"), {
+        model: new Model("w_sb_ump45"),
+        bone: 24818,
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      WEAPON_LIST.set(GetHashKey("weapon_specialcarbine_mk2"), {
+        model: new Model("w_ar_specialcarbinemk2"),
+        bone: 24818,
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      WEAPON_LIST.set(GetHashKey("WEAPON_ASSAULTRIFLE"), {
+        model: new Model("w_ar_assaultrifle"),
+        bone: 24818,
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      WEAPON_LIST.set(GetHashKey("WEAPON_ASSAULTRIFLE"), {
+        model: new Model("w_ar_assaultrifle"),
+        bone: 24818,
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      WEAPON_LIST.set(GetHashKey("WEAPON_ASSAULTRIFLE"), {
+        model: new Model("w_ar_assaultrifle"),
+        bone: 24818,
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      WEAPON_LIST.set(GetHashKey("WEAPON_ASSAULTRIFLE"), {
+        model: new Model("w_ar_assaultrifle"),
+        bone: 24818,
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      WEAPON_LIST.set(GetHashKey("WEAPON_ASSAULTRIFLE"), {
+        model: new Model("w_ar_assaultrifle"),
+        bone: 24818,
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      WEAPON_LIST.set(GetHashKey("WEAPON_ASSAULTRIFLE"), {
+        model: new Model("w_ar_assaultrifle"),
+        bone: 24818,
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      WEAPON_LIST.set(GetHashKey("WEAPON_ASSAULTRIFLE"), {
+        model: new Model("w_ar_assaultrifle"),
+        bone: 24818,
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      WEAPON_LIST.set(GetHashKey("WEAPON_ASSAULTRIFLE"), {
+        model: new Model("w_ar_assaultrifle"),
+        bone: 24818,
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      WEAPON_LIST.set(GetHashKey("WEAPON_ASSAULTRIFLE"), {
+        model: new Model("w_ar_assaultrifle"),
+        bone: 24818,
+        offset: new Vector3(0.05, -0.17, -0.02),
+        rotation: new Vector3(0, 155, 0),
+        category: 3 /* Assault */
+      });
+      setImmediate(() => {
+        let disabledWeapons = [];
+        for (const weapon of DISABLED_WEAPONS) {
+          disabledWeapons.push(GetHashKey(weapon.toUpperCase()));
+        }
+        for (const [hash] of WEAPON_LIST) {
+          if (disabledWeapons.includes(hash)) {
+            WEAPON_LIST.delete(hash);
+          }
+        }
       });
     }
   });

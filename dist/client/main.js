@@ -14905,9 +14905,9 @@ ${word} `;
       handleMapSet = (plySrc, prop, weaponType) => {
         let weaponData = weapons.get(plySrc);
         weaponData = weaponData ? weaponData : {
-          melee: void 0,
-          handgun: void 0,
-          heavy: void 0
+          melee: null,
+          handgun: null,
+          heavy: null
         };
         const { melee, handgun, heavy } = weaponData;
         if (weaponType === "weapons:melee") {

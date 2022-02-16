@@ -27,9 +27,9 @@ on('onClientResourceStart', (resource: string) => {
 const handleMapSet = (plySrc: number, prop: Prop, weaponType: string)  => {
 	let weaponData = weapons.get(plySrc);
 	weaponData = weaponData ? weaponData : {
-		melee: undefined,
-		handgun: undefined,
-		heavy: undefined
+		melee: null,
+		handgun: null,
+		heavy: null
 	}
 
 	const { melee, handgun, heavy } = weaponData;

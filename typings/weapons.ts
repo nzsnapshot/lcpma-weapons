@@ -1,10 +1,10 @@
 import { Prop } from "@nativewrappers/client/lib/models/Prop";
 
 export interface WeaponTypes {
-	melee: Prop | undefined,
-	handgun: Prop | undefined,
+	melee: Prop | null,
+	handgun: Prop | null,
 	// Heavy would be any AR, Sniper Rifle, etc.
-	heavy: Prop | undefined
+	heavy: Prop | null
 }
 
 // This would be the local players current weapons
