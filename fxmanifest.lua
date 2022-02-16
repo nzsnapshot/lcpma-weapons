@@ -1,6 +1,7 @@
 fx_version 'cerulean'
 game 'gta5'
 
+file "disabledweapons.json"
 
 server_scripts {
     'dist/server/*.js',
@@ -9,6 +10,3 @@ server_scripts {
 client_script {
     'dist/client/*.js'
 }
-
-
-lua54 'yes'

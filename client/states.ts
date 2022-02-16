@@ -1,4 +1,7 @@
-import { World, Player as PlyObj, Prop } from "@nativewrappers/client"
+import { World } from "@nativewrappers/client/lib/World"
+import { Player } from "@nativewrappers/client/lib/models/Player"
+import { Prop } from "@nativewrappers/client/lib/models/Prop"
+
 import { WEAPON_LIST } from "../shared/utils";
 import { WeaponTypes, WEAPON_BAG_TYPES } from "../typings/weapons";
 import { Delay } from "./utils";
@@ -52,7 +55,6 @@ for (const stateBagName of WEAPON_BAG_TYPES) {
 		const plySrc: number = Number(bagName.replace("player:", ''))
 		// We'll get this back as replicated, just discard it.
 		if (replicated && plySrc === serverId) return;
-		console.log(plySrc, stateBagName)
 		if (value == 0) {
 			handleDeleteForServerId(plySrc, stateBagName);
 			return;
@@ -60,7 +62,7 @@ for (const stateBagName of WEAPON_BAG_TYPES) {
 
 		const weaponInfo = WEAPON_LIST.get(value)
 		if(!weaponInfo) return console.log("no valid weapon");
-		const ply = PlyObj.fromServerId(plySrc);
+		const ply = Player.fromServerId(plySrc);
 		
 		// For a few frames the player will exist before their actual ped
 		// this gets around that by waiting for their ped handle to exist
@@ -71,6 +73,7 @@ for (const stateBagName of WEAPON_BAG_TYPES) {
 		const ped = ply.Ped;
 		const weaponObj = await World.createProp(weaponInfo.model, ped.Position, true, true, false);
 		if (!weaponObj) return;
+		weaponObj.IsCollisionEnabled = false
 		Entity(weaponObj.Handle).state.set('isClientWeapon', true, false);
 		handleMapSet(plySrc, weaponObj, stateBagName);
 		weaponObj.attachToBone(

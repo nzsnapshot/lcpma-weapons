@@ -1,4 +1,4 @@
-import { Prop, Weapon } from "@nativewrappers/client";
+import { Prop } from "@nativewrappers/client/lib/models/Prop";
 
 export interface WeaponTypes {
 	melee: Prop | undefined,

@@ -3,7 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@citizenfx/client': ^2.0.5208-1
   '@citizenfx/server': ^2.0.5208-1
-  '@nativewrappers/client': ^1.6.1
+  '@nativewrappers/client': ^1.7.1
   esbuild: ^0.14.11
   node-fetch: '2'
   typescript: ^4.5.4
@@ -11,7 +11,7 @@ specifiers:
 dependencies:
   '@citizenfx/client': 2.0.5208-1
   '@citizenfx/server': 2.0.5208-1
-  '@nativewrappers/client': 1.6.1
+  '@nativewrappers/client': 1.7.1
   node-fetch: 2.6.6
 
 devDependencies:
@@ -28,8 +28,8 @@ packages:
     resolution: {integrity: sha512-rNi5bVORjVNxRAItu14ir+pDOlfzOPC2paz841kdOWTZ4VjnGZ2xpHiMixWb7xLxbXDNxaPqWwXh/khT7QOtTw==}
     dev: false
 
-  /@nativewrappers/client/1.6.1:
-    resolution: {integrity: sha512-hDUTHwnmkUNCLqizKd8A1k7WTXUCbXBtE9IOyLlsGR5Co4LM2r5Ly3S9nZmcHadpnDxN/4jZa5BTtLd3n8UCNw==}
+  /@nativewrappers/client/1.7.1:
+    resolution: {integrity: sha512-4rEcuVOgd2SAvSHg3A/qRQvTr70IX2Do0R2ijpCXPiDPGlkRufDNRvVFHnrETyaKNtrWXSgxs9belD2dJq1zSQ==}
     dev: false
 
   /esbuild-android-arm64/0.14.11:

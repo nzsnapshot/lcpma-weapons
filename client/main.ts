@@ -1,9 +1,7 @@
-import { Game } from "@nativewrappers/client";
 import { WeaponCategory, WEAPON_LIST } from "../shared/utils";
 import { CurrentWeapons } from "../typings/weapons";
 import { Delay } from "./utils"
 import './states.ts'
-
 
 let currentWeapons: CurrentWeapons = {
 	melee: 0,
@@ -12,27 +10,45 @@ let currentWeapons: CurrentWeapons = {
 }
 
 setTick(async () => {
-	// We don't use internal weapon collections in fivem-js/nativewrappers because of them being wildly inconsistent
-	const ped = Game.PlayerPed;
-	const currWeapon = GetSelectedPedWeapon(ped.Handle);
+	const ped = PlayerPedId();
+	const currWeapon = GetSelectedPedWeapon(ped);
 
 	for (const [hash, weaponData] of WEAPON_LIST) {
-		if (!HasPedGotWeapon(ped.Handle, hash, false)) continue;
+		const hasWeapon = HasPedGotWeapon(ped, hash, false);
 		const weaponEquipped = currWeapon === hash;
-		let weaponHash = weaponEquipped ? 0 : hash
+		let weaponHash = (weaponEquipped || !hasWeapon) ? 0 : hash
 
-		// Set the current weapon if there is not one currently set
-		switch (weaponData.category) {
-			case WeaponCategory.Melee:
-				currentWeapons.melee = weaponHash;
-				break;
-			case WeaponCategory.HandGuns: 
-				currentWeapons.handgun = weaponHash;
-				break;
-			default:
-				currentWeapons.heavy = weaponHash;
-				break;
-		}
+        // Set the current weapon if there is not one currently set
+        switch (weaponData.category) {
+            case WeaponCategory.Melee:
+                if (weaponHash == 0) {
+                    if (currentWeapons.melee == hash) {
+                        currentWeapons.melee = weaponHash
+                    }
+                    continue;
+                }
+                currentWeapons.melee = weaponHash;
+                break;
+            case WeaponCategory.HandGuns: 
+                if (weaponHash == 0) {
+                    if (currentWeapons.handgun == hash) {
+                        currentWeapons.handgun = weaponHash
+                    }
+                    continue;
+                }
+                currentWeapons.handgun = weaponHash;
+
+                break;
+            default:
+                if (weaponHash == 0) {
+                    if (currentWeapons.heavy == hash) {
+                        currentWeapons.heavy = weaponHash
+                    }
+                    continue;
+                }
+                currentWeapons.heavy = weaponHash;
+                break;
+        }	
 	}
 
 	if (LocalPlayer.state['weapons:melee'] !== currentWeapons.melee ) {

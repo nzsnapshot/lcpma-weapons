@@ -1,5 +1,4 @@
 const { build } = require('esbuild')
-console.log("watch was", process.env)
 
 build({
   entryPoints: ['./client/main.ts'],

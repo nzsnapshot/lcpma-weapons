@@ -1,6 +1,9 @@
 
 import { Model, Vector3 } from "@nativewrappers/client"
 
+export const DISABLED_WEAPONS: string[] = JSON.parse(LoadResourceFile(GetCurrentResourceName(), "disabledweapons.json"))
+
+
 export enum WeaponCategory {
 	Melee,
 	HandGuns,
@@ -25,37 +28,6 @@ interface WeaponInformation {
 
 export const WEAPON_LIST: Map<number, WeaponInformation> = new Map()
 
-WEAPON_LIST.set(GetHashKey("WEAPON_BOTTLE"), {
-	model: new Model("prop_w_me_bottle"),
-	bone: 24818,
-	offset: new Vector3(0.1, -0.15, 0.0),
-	rotation: new Vector3(0.0, 0.0, 0.0),
-	category: WeaponCategory.Melee
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_KNUCKLE"), {
-	model: new Model("prop_w_me_dagger"),
-	bone: 24818,
-	offset: new Vector3(0.1, -0.15, 0.0),
-	rotation: new Vector3(0.0, 0.0, 0.0),
-	category: WeaponCategory.Melee
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_SWITCHBLADE"), {
-	model: new Model("prop_w_me_dagger"),
-	bone: 24818,
-	offset: new Vector3(0.1, -0.15, 0.0),
-	rotation: new Vector3(0.0, 0.0, 0.0),
-	category: WeaponCategory.Melee
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_FLAREGUN"), {
-	model: new Model("w_pi_flaregun"),
-	bone: 58271,
-	offset: new Vector3(-0.01, 0.1, -0.07),
-	rotation: new Vector3(-55.0, 0.1, 0.0),
-	category: WeaponCategory.HandGuns
-})
 
 WEAPON_LIST.set(GetHashKey("WEAPON_MINIGUN"), {
 	model: new Model("w_mg_minigun"),
@@ -81,110 +53,6 @@ WEAPON_LIST.set(GetHashKey("WEAPON_HOMINGLAUNCHER"), {
 	category: WeaponCategory.Heavy
 })
 
-WEAPON_LIST.set(GetHashKey("WEAPON_STICKYBOMB"), {
-	model: new Model("prop_bomb_01_s"),
-	bone: 24818,
-	offset: new Vector3(0.1, -0.15, 0.0),
-	rotation: new Vector3(0.0, 0.0, 0.0),
-	category: WeaponCategory.Throw
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_MOLOTOV"), {
-	model: new Model("w_ex_molotov"),
-	bone: 24818,
-	offset: new Vector3(0.1, -0.15, 0.0),
-	rotation: new Vector3(0.0, 0.0, 0.0),
-	category: WeaponCategory.Throw
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_FIREEXTINGUISHER"), {
-	model: new Model("w_am_fire_exting"),
-	bone: 24818,
-	offset: new Vector3(0.1, -0.15, 0.0),
-	rotation: new Vector3(0.0, 0.0, 0.0),
-	category: WeaponCategory.Throw
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_PETROLCAN"), {
-	model: new Model("w_am_jerrycan"),
-	bone: 24818,
-	offset: new Vector3(0.1, -0.15, 0.0),
-	rotation: new Vector3(0.0, 0.0, 0.0),
-	category: WeaponCategory.Throw
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_SNOWBALL"), {
-	model: new Model("w_ex_snowball"),
-	bone: 24818,
-	offset: new Vector3(0.1, -0.15, 0.0),
-	rotation: new Vector3(0.0, 0.0, 0.0),
-	category: WeaponCategory.Throw
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_BALL"), {
-	model: new Model("w_am_baseball"),
-	bone: 24818,
-	offset: new Vector3(0.1, -0.15, 0.0),
-	rotation: new Vector3(0.0, 0.0, 0.0),
-	category: WeaponCategory.Throw
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_GRENADE"), {
-	model: new Model("w_ex_grenadefrag"),
-	bone: 24818,
-	offset: new Vector3(0.1, -0.15, 0.0),
-	rotation: new Vector3(0.0, 0.0, 0.0),
-	category: WeaponCategory.Throw
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_SMOKEGRENADE"), {
-	model: new Model("w_ex_grenadesmoke"),
-	bone: 24818,
-	offset: new Vector3(0.1, -0.15, 0.0),
-	rotation: new Vector3(0.0, 0.0, 0.0),
-	category: WeaponCategory.Throw
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_BZGAS"), {
-	model: new Model("w_ex_grenadesmoke"),
-	bone: 24818,
-	offset: new Vector3(0.1, -0.15, 0.0),
-	rotation: new Vector3(0.0, 0.0, 0.0),
-	category: WeaponCategory.Throw
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_DIGISCANNER"), {
-	model: new Model("w_am_digiscanner"),
-	bone: 24818,
-	offset: new Vector3(0.1, -0.15, 0.0),
-	rotation: new Vector3(0.0, 0.0, 0.0),
-	category: WeaponCategory.Other
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_DAGGER"), {
-	model: new Model("prop_w_me_dagger"),
-	bone: 51826,
-	offset: new Vector3(0.1, -0.15, 0.0),
-	rotation: new Vector3(0.0, 0.0, 0.0),
-	category: WeaponCategory.Other
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_WRENCH"), {
-	model: new Model("w_me_hammer"),
-	bone: 24818,
-	offset: new Vector3(0.1, -0.15, 0.0),
-	rotation: new Vector3(0.0, 0.0, 0.0),
-	category: WeaponCategory.Other
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_VINTAGEPISTOL"), {
-	model: new Model("w_pi_vintage_pistol"),
-	bone: 51826,
-	offset: new Vector3(-0.01, 0.1, 0.07),
-	rotation: new Vector3(-115.0, 0.0, 0.0),
-	category: WeaponCategory.HandGuns
-})
-
 WEAPON_LIST.set(GetHashKey("WEAPON_BULLPUPRIFLE"), {
 	model: new Model("w_ar_bullpuprifle"),
 	bone: 24818,
@@ -193,13 +61,6 @@ WEAPON_LIST.set(GetHashKey("WEAPON_BULLPUPRIFLE"), {
 	category: WeaponCategory.Assault
 })
 
-WEAPON_LIST.set(GetHashKey("WEAPON_CROWBAR"), {
-	model: new Model("w_me_crowbar"),
-	bone: 24818,
-	offset: new Vector3(-0.1, -0.15, -0.0),
-	rotation: new Vector3(180.0, 90.0, 0.0),
-	category: WeaponCategory.Melee
-})
 
 WEAPON_LIST.set(GetHashKey("WEAPON_SNIPERRIFLE"), {
 	model: new Model("w_sr_sniperrifle"),
@@ -209,29 +70,6 @@ WEAPON_LIST.set(GetHashKey("WEAPON_SNIPERRIFLE"), {
 	category: WeaponCategory.Sniper
 })
 
-WEAPON_LIST.set(GetHashKey("WEAPON_HEAVYPISTOL"), {
-	model: new Model("w_pi_heavypistol"),
-	bone: 51826,
-	offset: new Vector3(-0.01, 0.1, 0.07),
-	rotation: new Vector3(-115.0, 0.0, 0.0),
-	category: WeaponCategory.HandGuns
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_POOLCUE"), {
-	model: new Model("w_me_poolcue"),
-	bone: 24818,
-	offset: new Vector3(-0.25, -0.17, -0.0),
-	rotation: new Vector3(180.0, 90.0, 0.0),
-	category: WeaponCategory.Melee
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_PISTOL"), {
-	model: new Model("w_pi_pistol"),
-	bone: 51826,
-	offset: new Vector3(-0.01, 0.1, 0.07),
-	rotation: new Vector3(-115.0, 0.0, 0.0),
-	category: WeaponCategory.HandGuns
-})
 
 WEAPON_LIST.set(GetHashKey("WEAPON_SMG"), {
 	model: new Model("w_sb_smg"),
@@ -239,38 +77,6 @@ WEAPON_LIST.set(GetHashKey("WEAPON_SMG"), {
 	offset: new Vector3(0.0, -0.15, 0.0),
 	rotation: new Vector3(0.0, 155.0, 0.0),
 	category: WeaponCategory.SMG
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_GOLFCLUB"), {
-	model: new Model("w_me_gclub"),
-	bone: 24818,
-	offset: new Vector3(-0.1, -0.15, -0.0),
-	rotation: new Vector3(180.0, 90.0, 0.0),
-	category: WeaponCategory.Melee
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_MACHETE"), {
-	model: new Model("prop_ld_w_me_machette"),
-	bone: 24818,
-	offset: new Vector3(-0.1, -0.15, -0.0),
-	rotation: new Vector3(180.0, 90.0, 0.0),
-	category: WeaponCategory.Melee
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_FLASHLIGHT"), {
-	model: new Model("prop_w_me_dagger"),
-	bone: 58271,
-	offset: new Vector3(0.0, 0.0, 0.0),
-	rotation: new Vector3(0.0, 0.0, 0.0),
-	category: WeaponCategory.Melee
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_HAMMER"), {
-	model: new Model("prop_tool_hammer"),
-	bone: 51826,
-	offset: new Vector3(0.1, -0.15, 0.0),
-	rotation: new Vector3(0.0, 0.0, 0.0),
-	category: WeaponCategory.Melee
 })
 
 WEAPON_LIST.set(GetHashKey("WEAPON_HUNTINGRIFLE"), {
@@ -289,37 +95,14 @@ WEAPON_LIST.set(GetHashKey("WEAPON_GRENADELAUNCHER"), {
 	category: WeaponCategory.Heavy
 })
 
-WEAPON_LIST.set(GetHashKey("WEAPON_APPISTOL"), {
-	model: new Model("w_pi_appistol"),
-	bone: 51826,
-	offset: new Vector3(-0.01, 0.1, 0.07),
-	rotation: new Vector3(-115.0, 0.0, 0.0),
-	category: WeaponCategory.HandGuns
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_BATTLEAXE"), {
-	model: new Model("w_me_battleaxe"),
-	bone: 24818,
-	offset: new Vector3(-0.1, -0.15, -0.0),
-	rotation: new Vector3(180.0, 90.0, 0.0),
-	category: WeaponCategory.Melee
-})
-
 WEAPON_LIST.set(GetHashKey("WEAPON_STUNGUN"), {
 	model: new Model("w_pi_stungun"),
-	bone: 58271,
-	offset: new Vector3(-0.01, 0.1, -0.07),
-	rotation: new Vector3(-55.0, 0.1, 0.0),
+	bone: 51826,
+	offset: new Vector3(-0.055, 0.1, 0.05),
+	rotation: new Vector3(-135.0, 0.15, 0.0),
 	category: WeaponCategory.HandGuns
 })
 
-WEAPON_LIST.set(GetHashKey("WEAPON_PISTOL50"), {
-	model: new Model("w_pi_pistol50"),
-	bone: 51826,
-	offset: new Vector3(-0.01, 0.1, 0.07),
-	rotation: new Vector3(-115.0, 0.0, 0.0),
-	category: WeaponCategory.HandGuns
-})
 
 WEAPON_LIST.set(GetHashKey("WEAPON_COMBATMG"), {
 	model: new Model("w_mg_combatmg"),
@@ -337,21 +120,6 @@ WEAPON_LIST.set(GetHashKey("WEAPON_ASSAULTSMG"), {
 	category: WeaponCategory.SMG
 })
 
-WEAPON_LIST.set(GetHashKey("WEAPON_KNIFE"), {
-	model: new Model("prop_w_me_knife_01"),
-	bone: 24818,
-	offset: new Vector3(0.1, -0.15, 0.0),
-	rotation: new Vector3(0.0, 0.0, 0.0),
-	category: WeaponCategory.Melee
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_MICROSMG"), {
-	model: new Model("w_sb_microsmg"),
-	bone: 51826,
-	offset: new Vector3(0.0, 0.009, 0.15),
-	rotation: new Vector3(270.0, -10.0, 0.0),
-	category: WeaponCategory.SMG
-})
 
 WEAPON_LIST.set(GetHashKey("WEAPON_MARKSMANRIFLE"), {
 	model: new Model("w_sr_marksmanrifle"),
@@ -457,14 +225,6 @@ WEAPON_LIST.set(GetHashKey("WEAPON_ASSAULTRIFLE"), {
 	category: WeaponCategory.Assault
 })
 
-WEAPON_LIST.set(GetHashKey("WEAPON_HATCHET"), {
-	model: new Model("w_me_hatchet"),
-	bone: 24818,
-	offset: new Vector3(0.1, -0.15, 0.0),
-	rotation: new Vector3(0.0, 0.0, 0.0),
-	category: WeaponCategory.Melee
-})
-
 WEAPON_LIST.set(GetHashKey("WEAPON_PUMPSHOTGUN_MK2"), {
 	model: new Model("w_sg_pumpshotgunmk2"),
 	bone: 24818,
@@ -497,14 +257,6 @@ WEAPON_LIST.set(GetHashKey("WEAPON_HEAVYSHOTGUN"), {
 	category: WeaponCategory.Shotgun
 })
 
-WEAPON_LIST.set(GetHashKey("WEAPON_NIGHTSTICK"), {
-	model: new Model("w_me_nightstick"),
-	bone: 51826,
-	offset: new Vector3(-0.15, 0.07, 0.125),
-	rotation: new Vector3(270.0, 90.0, 0.0),
-	category: WeaponCategory.Melee
-})
-
 WEAPON_LIST.set(GetHashKey("WEAPON_GUSENBERG"), {
 	model: new Model("w_sb_gusenberg"),
 	bone: 24818,
@@ -513,26 +265,190 @@ WEAPON_LIST.set(GetHashKey("WEAPON_GUSENBERG"), {
 	category: WeaponCategory.SMG
 })
 
-WEAPON_LIST.set(GetHashKey("WEAPON_COMBATPISTOL"), {
-	model: new Model("w_pi_combatpistol"),
-	bone: 51826,
-	offset: new Vector3(-0.01, 0.1, 0.07),
-	rotation: new Vector3(-115.0, 0.0, 0.0),
-	category: WeaponCategory.HandGuns
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_SNSPISTOL"), {
-	model: new Model("w_pi_sns_pistol"),
-	bone: 58271,
-	offset: new Vector3(-0.01, 0.1, -0.07),
-	rotation: new Vector3(-55.0, 0.1, 0.0),
-	category: WeaponCategory.HandGuns
-})
-
-WEAPON_LIST.set(GetHashKey("WEAPON_BAT"), {
-	model: new Model("w_me_bat"),
+WEAPON_LIST.set(GetHashKey("W_AR_ASSAULTRIFLEMK2"), {
+	model: new Model("weapon_assaultrifle_mk2"),
 	bone: 24818,
-	offset: new Vector3(-0.25, -0.17, -0.0),
-	rotation: new Vector3(90.0, 90.0, 0.0),
-	category: WeaponCategory.Melee
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+
+WEAPON_LIST.set(GetHashKey("W_AR_BULLPUPRIFLEMK2"), {
+	model: new Model("weapon_bullpuprifle_mk2"),
+	bone: 24818,
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+
+WEAPON_LIST.set(GetHashKey("WEAPON_CARBINERIFLE_MK2"), {
+	model: new Model("W_AR_CARBINERIFLEMK2"),
+	bone: 24818,
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+
+WEAPON_LIST.set(GetHashKey("WEAPON_AK74U"), {
+	model: new Model("w_ar_ak74u"),
+	bone: 24818,
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+
+WEAPON_LIST.set(GetHashKey("WEAPON_AKMS"), {
+	model: new Model("w_ar_akms"),
+	bone: 24818,
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+
+WEAPON_LIST.set(GetHashKey("weapon_compactrifle"), {
+	model: new Model("w_ar_assaultrifle_smg"),
+	bone: 24818,
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+
+WEAPON_LIST.set(GetHashKey("WEAPON_COMPACTRIFLE_MK2"), {
+	model: new Model("w_ar_compactrifle_mk2"),
+	bone: 24818,
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+
+WEAPON_LIST.set(GetHashKey("weapon_mossberg590"), {
+	model: new Model("w_sg_mossberg590"),
+	bone: 24818,
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+WEAPON_LIST.set(GetHashKey("weapon_p90"), {
+	model: new Model("w_sb_p90"),
+	bone: 24818,
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+
+WEAPON_LIST.set(GetHashKey("weapon_remington870"), {
+	model: new Model("w_sg_remington870"),
+	bone: 24818,
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+
+WEAPON_LIST.set(GetHashKey("weapon_spas12"), {
+	model: new Model("w_sg_spas12"),
+	bone: 24818,
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+
+WEAPON_LIST.set(GetHashKey("weapon_ump45"), {
+	model: new Model("w_sb_ump45"),
+	bone: 24818,
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+
+WEAPON_LIST.set(GetHashKey("weapon_specialcarbine_mk2"), {
+	model: new Model("w_ar_specialcarbinemk2"),
+	bone: 24818,
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+
+WEAPON_LIST.set(GetHashKey("WEAPON_ASSAULTRIFLE"), {
+	model: new Model("w_ar_assaultrifle"),
+	bone: 24818,
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+
+WEAPON_LIST.set(GetHashKey("WEAPON_ASSAULTRIFLE"), {
+	model: new Model("w_ar_assaultrifle"),
+	bone: 24818,
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+
+WEAPON_LIST.set(GetHashKey("WEAPON_ASSAULTRIFLE"), {
+	model: new Model("w_ar_assaultrifle"),
+	bone: 24818,
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+
+WEAPON_LIST.set(GetHashKey("WEAPON_ASSAULTRIFLE"), {
+	model: new Model("w_ar_assaultrifle"),
+	bone: 24818,
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+
+WEAPON_LIST.set(GetHashKey("WEAPON_ASSAULTRIFLE"), {
+	model: new Model("w_ar_assaultrifle"),
+	bone: 24818,
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+
+WEAPON_LIST.set(GetHashKey("WEAPON_ASSAULTRIFLE"), {
+	model: new Model("w_ar_assaultrifle"),
+	bone: 24818,
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+
+WEAPON_LIST.set(GetHashKey("WEAPON_ASSAULTRIFLE"), {
+	model: new Model("w_ar_assaultrifle"),
+	bone: 24818,
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+
+WEAPON_LIST.set(GetHashKey("WEAPON_ASSAULTRIFLE"), {
+	model: new Model("w_ar_assaultrifle"),
+	bone: 24818,
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+
+WEAPON_LIST.set(GetHashKey("WEAPON_ASSAULTRIFLE"), {
+	model: new Model("w_ar_assaultrifle"),
+	bone: 24818,
+	offset: new Vector3(0.05, -0.17, -0.02),
+	rotation: new Vector3(0.0, 155.0, 0.0),
+	category: WeaponCategory.Assault
+})
+
+setImmediate(() => {
+	let disabledWeapons: number[] = [];
+
+	for (const weapon of DISABLED_WEAPONS) {
+		disabledWeapons.push(GetHashKey(weapon.toUpperCase()));
+	}
+	for (const [hash] of WEAPON_LIST) {
+		if (disabledWeapons.includes(hash)) {
+			WEAPON_LIST.delete(hash);
+		}
+	}
 })
